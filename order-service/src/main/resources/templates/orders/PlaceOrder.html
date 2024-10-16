@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Place Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .order-details {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .product-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .order-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .nav-link {
+            position: relative;
+            display: inline-block;
+            text-decoration: none;
+            color: blue; 
+            font-weight: normal;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2.5px;
+            display: block;
+            margin-top: 5px;
+            right: 0;
+            background: #ff0000; 
+            transition: width 0.3s ease;
+            -webkit-transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 45%;
+            left: 0;
+            right: auto;
+        }
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+            right: auto;
+        }
+        .nav-link.active {
+            color: #561ad7;
+            font-weight: bold;
+        }
+        .nav-link {
+            color: rgb(0, 0, 0) !important;
+            font-size: 17px;
+            font-weight: bold;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .navbar {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        .navbar {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+            background-color: #b7e0d6;
+        }
+        .navbar-brand img {
+            width: 160px;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #a39595;">
+        <a class="navbar-brand" href="Landing main.html"><img src="https://i.postimg.cc/T2nXh20S/REVSHOP-main2.png" alt="RevShop"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/displayProducts">Home</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/displayProducts">Shop</a></li>
+				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/orderitems">Your Orders</a></li>
+				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/favorite">Wishlist</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/cart"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-bag" viewBox="0 0 16 16">
+                    <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                  </svg>Cart
+                 </li>
+                 <li class="nav-item mx-3"><a class="nav-link" href="/revshop/home">Logout</a></li></a></li>
+            </ul>
+            
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Place Your Order</h1>
+        <form th:action="@{/revshop/order}" method="post" th:object="${order}">
+            <div class="order-details">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Product Name: <span th:text="${productName}"></span></h5>
+                        <h5>Product Price: <span th:text="*{totalAmount}"></span></h5>
+
+                        <h5>Shipping Address:</h5>
+                        <textarea class="form-control" rows="4" placeholder="Enter your shipping address..." th:field="*{shippingAddress}"></textarea>
+						
+						<h5>Billing Address:</h5>
+                        <textarea class="form-control" rows="4" placeholder="Enter your billing address..." th:field="*{billingAddress}"></textarea>
+                        <h5 class="mt-3">Payment Method:</h5>
+                        <select class="form-control" name="paymentMethod" id="paymentMethod" required>
+                            <option value="" disabled selected>Select Payment Method</option>
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="Debit Card">Debit Card</option>
+                            <option value="QR Code">QR Code</option>
+                            <option value="UPI">UPI</option>
+                            <option value="Cash on Delivery">Cash on Delivery</option>
+                        </select>
+
+                        <!-- Card Details -->
+                        <div class="card-details mt-3" id="cardDetails" style="display: none;">
+                            <h5>Enter Card Details:</h5>
+                            <input type="text" class="form-control" name="cardNumber" placeholder="Card Number" />
+                            <input type="text" class="form-control" name="expiryDate" placeholder="Expiry Date (MM/YY)" />
+                            <input type="text" class="form-control" name="cvv" placeholder="CVV" />
+                        </div>
+
+                        <!-- QR Code -->
+                        <div class="qr-code mt-3" id="qrCode" style="display: none;">
+                            <h5>Scan this QR Code for Payment:</h5>
+                            <img src="https://www.emoderationskills.com/wp-content/uploads/2010/08/QR1.jpg" alt="QR Code" width="200">
+                        </div>
+
+                        <!-- UPI Options -->
+                        <div class="upi-options mt-3" id="upiOptions" style="display: none;">
+                            <h5>Select UPI Payment Method:</h5>
+                            <select class="form-control" name="upiMethod">
+                                <option value="" disabled selected>Select UPI</option>
+                                <option value="Paytm">Paytm</option>
+                                <option value="PhonePe">PhonePe</option>
+                                <option value="GPay">GPay</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Product Image:</h5>
+                        <img th:src="${productImage}" alt="Product Image" class="product-image" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="order-button mt-4">
+                <input type="hidden" th:field="*{totalAmount}" id="hiddenTotalPrice" />
+                <button type="submit" class="btn btn-success">Place Order</button>
+            </div>
+        </form>
+    </div>
+
+      <!-- Footer Section -->
+<footer class="text-center text-white" style="background-color: #a39595; padding: 1rem; margin-top: 5rem;">
+    <p>&copy; 2024 RevShop. All Rights Reserved.</p>
+    <p><center><b>Support:</b> revshop.ecommerce@gmail.com</center></p>
+    <p>Follow us on
+        <a href="https://www.facebook.com/login/" class="text-white" style="margin: 0 10px;" target="_blank">
+            <i class="fab fa-facebook"></i> Facebook
+        </a> |
+        <a href="https://www.instagram.com/revshop_official/" class="text-white" style="margin: 0 10px;" target="_blank">
+            <i class="fab fa-instagram"></i> Instagram
+        </a> |
+        <a href="https://x.com/revshop_rev" class="text-white" style="margin: 0 10px;" target="_blank">
+            <i class="fab fa-twitter"></i> Twitter
+        </a> |
+        <a href="https://www.linkedin.com/in/revshop" class="text-white" style="margin: 0 10px;" target="_blank">
+            <i class="fab fa-linkedin"></i> LinkedIn
+        </a>
+    </p>    
+</footer>
+
+    <script>
+        const paymentMethodSelect = document.getElementById('paymentMethod');
+        const qrCode = document.getElementById('qrCode');
+        const upiOptions = document.getElementById('upiOptions');
+        const cardDetails = document.getElementById('cardDetails');
+
+        paymentMethodSelect.addEventListener('change', function() {
+            qrCode.style.display = 'none';
+            upiOptions.style.display = 'none';
+            cardDetails.style.display = 'none';
+
+            if (this.value === 'QR Code') {
+                qrCode.style.display = 'block';
+            } else if (this.value === 'UPI') {
+                upiOptions.style.display = 'block';
+            } else if (this.value === 'Credit Card' || this.value === 'Debit Card') {
+                cardDetails.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
