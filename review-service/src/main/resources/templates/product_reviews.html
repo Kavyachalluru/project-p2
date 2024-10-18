@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Reviews</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Reviews for Product ID: <span th:text="${productId}"></span></h1>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Review ID</th>
+                    <th>Buyer ID</th>
+                    <th>Review Text</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="review : ${reviews}">
+                    <td th:text="${review.id}"></td>
+                    <td th:text="${review.buyerId}"></td>
+                    <td th:text="${review.reviewText}"></td>
+                    <td th:text="${review.rating}"></td>
+                    <td>
+                        <a th:href="@{/reviews/delete/{id}(id=${review.id})}" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/reviews/new}" class="btn btn-primary">Add a New Review</a>
+    </div>
+</body>
+</html>
