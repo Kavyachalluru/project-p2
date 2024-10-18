@@ -1,0 +1,62 @@
+version: '3.8'  # Use a version that supports all the features you need
+
+services:
+  # Service Discovery (Eureka)
+  eureka:
+    image: service-discovery:latest
+    build:
+      context: ./service-discovery  # Adjust context to the directory containing the Dockerfile for Eureka
+      dockerfile: Dockerfile
+    container_name: discovery
+    ports:
+      - "8761:8761"
+    networks:
+      - rev_network
+
+  # API Gateway Service
+  api-gateway:
+    image: api-gateway:latest
+    build:
+      context: ./api-Gateway  # Adjust context to the directory containing the Dockerfile for API Gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "9089:9089"
+    depends_on:
+      - eureka
+    networks:
+      - rev_network
+
+  # Order Service
+  order-service:
+    image: order-service:latest
+    build:
+      context: ./order-service  # Adjust context to the directory containing the Dockerfile for Order Service
+      dockerfile: Dockerfile
+    container_name: order_backend
+    depends_on:
+      - eureka
+      - mysql
+    ports:
+      - "9090:9090"
+    networks:
+      - rev_network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://rev_sql:3306/revshop_docker
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+  # MySQL Database
+  mysql:
+    image: mysql:latest
+    container_name: rev_sql
+    ports:
+      - "3304:3306"
+    networks:
+      - rev_network
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: revshop_docker
+
+networks:
+  rev_network:
