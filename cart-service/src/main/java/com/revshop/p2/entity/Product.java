@@ -1,10 +1,15 @@
-package com.revshop.client_app.model;
+package com.revshop.p2.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property="id")
+
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 public class Product {
+	
 	private Long id;
 	private String name;
 	private String brand;
@@ -24,7 +29,6 @@ public class Product {
 	public String getDiscountPercentage() {
 		return discountPercentage;
 	}
-	public  Product() {}
 
 	public void setDiscountPercentage(String discountPercentage) {
 		this.discountPercentage = discountPercentage;
@@ -37,9 +41,6 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	private Seller seller;
-	
 	public Long getId() {
 		return id;
 	}
@@ -146,22 +147,9 @@ public class Product {
 		this.image_url = image_url;
 	}
 
-	public Seller getSeller() {
-		return seller;
-	}
+	
 
-	public void setSeller(Seller seller) {
-		this.seller = seller;
-	}
-
-//	@Override
-//	public String toString() {
-//		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", gender=" + gender + ", price=" + price
-//				+ ", discountPrice=" + discountPrice + ", quantity=" + quantity + ", threshold=" + threshold
-//				+ ", category=" + category + ", subCategory=" + subCategory + ", color=" + color + ", size=" + size
-//				+ ", description=" + description + ", image_url=" + image_url + ", discountPercentage="
-//				+ discountPercentage + ", seller=" + sellerId + "]";
-//	}
+	
 	
 
 

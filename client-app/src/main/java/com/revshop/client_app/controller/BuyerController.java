@@ -22,29 +22,27 @@ public class BuyerController {
 
     @GetMapping("/buyerRegister")
     public String showBuyerRegForm(Model model) {
-        model.addAttribute("buyer", new Buyer()); // Changed to singular 'buyer' for clarity
-        return "buyerReg"; // Ensure this matches the actual file name in resources/templates
+        model.addAttribute("buyer", new Buyer()); 
+        return "buyerReg"; 
     }
 
     @PostMapping("/buyerRegister")
     public String registerBuyer(Model model, @ModelAttribute("buyer") Buyer buyer) {
-        String buyerServiceUrl = "http://localhost:8081/revshop/buyerRegister"; // URL for REST API
+        String buyerServiceUrl = "http://localhost:8081/revshop/buyerRegister"; 
 
         try {
-            // Send the buyer object to the REST API via RestTemplate
             ResponseEntity<String> response = restTemplate.postForEntity(buyerServiceUrl, buyer, String.class);
 
             if (response.getStatusCode() == HttpStatus.CREATED) {
-                // Successfully registered, redirect to login
                 return "redirect:/revshop/login";
             } else {
                 model.addAttribute("error", "Error registering buyer. Please try again.");
-                return "buyerReg"; // Stay on the registration page with error message
+                return "buyerReg"; 
             }
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "Service is currently unavailable. Please try again later.");
-            return "buyerReg"; // Make sure this matches your template name
+            return "buyerReg"; 
         }
     }
 }

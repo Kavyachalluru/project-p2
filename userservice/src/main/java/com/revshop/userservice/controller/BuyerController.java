@@ -63,10 +63,7 @@ public class BuyerController {
         }
         return new ResponseEntity<>("Buyer not found in session", HttpStatus.UNAUTHORIZED);
     }
+    
+    
 
-    // Get All Buyers (Optional, example of a GET request)
-//    @GetMapping("/buyers")
-//    public ResponseEntity<?> getAllBuyers() {
-//        return new ResponseEntity<>(buyerService.getAllBuyers(), HttpStatus.OK);
-//    }
 }
