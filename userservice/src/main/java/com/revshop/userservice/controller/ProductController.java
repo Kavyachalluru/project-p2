@@ -37,7 +37,7 @@ public class ProductController {
     @GetMapping("/product")
     public ResponseEntity<String> showProductForm(Model model, HttpSession session) {
         model.addAttribute("product", new Product());
-        return ResponseEntity.ok("product_form"); // Render the product form view
+        return ResponseEntity.ok("product_form"); 
     }
 
     @PostMapping("/addProduct/{sellerId}")
@@ -49,11 +49,8 @@ public class ProductController {
         }
         Seller seller=ss.getSellerById(sellerId);
         System.out.println("product adding");
-        product.setSeller(seller); // Set the sellerId instead of the Seller object
-        
-        // Add your product saving logic here (save to the database)
-        // For example:
-        productService.addProduct(product); // Assuming you have a service to save the product
+        product.setSeller(seller); 
+        productService.addProduct(product); 
 
         return ResponseEntity.status(HttpStatus.CREATED).body("Product added successfully.");
     }
@@ -61,7 +58,7 @@ public class ProductController {
 
     @GetMapping("/show/{id}")
     public ResponseEntity<List<Product>> getProductsForSeller(@PathVariable Long id) {
-        System.out.println("Received request for seller ID: " + id); // Debug log
+        System.out.println("Received request for seller ID: " + id);
         List<Product> products = productService.findBySellerId(id);
         if (products.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -70,14 +67,8 @@ public class ProductController {
     }
 
 
-    // Show form to update the product by ID
     @GetMapping("/product/update")
     public ResponseEntity<?> showUpdateForm(@RequestParam("productId") Long id ) {
-       // Seller seller = (Seller) session.getAttribute("loggedInUser");
-//        if (seller == null) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not logged in.");
-//        }
-
         Product product = productService.getProductById(id);
         if (product != null) {
             
@@ -88,15 +79,14 @@ public class ProductController {
 
     @PostMapping("/product/update")
     public ResponseEntity<?> updateProduct(@RequestBody Product product, @RequestParam("sellerId") Long sellerId, @RequestParam("productId") Long id) {
-        //Seller seller = (Seller) session.getAttribute("loggedInUser");
-    	System.out.println("Received sellerId: " + sellerId); // Log sellerId
-        System.out.println("Received productId: " + id); // Log productId
+    	System.out.println("Received sellerId: " + sellerId); 
+        System.out.println("Received productId: " + id); 
 
         if (sellerId == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not logged in.");
         }
 
-        product.setId(id); // Ensure the product ID is set
+        product.setId(id); 
         Seller seller=ss.getSellerById(sellerId);
         product.setSeller(seller);
         try {
@@ -108,10 +98,8 @@ public class ProductController {
         }
     }
 
-    // Delete a product by ID
     @GetMapping("/product/delete/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable("id") Long id,@RequestParam Long sellerId) {
-        //Seller seller = (Seller) session.getAttribute("loggedInUser");
     	System.out.println("delete sellerId: " + sellerId);
         if (sellerId == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not logged in.");
@@ -142,12 +130,10 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
-    // Search by category
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProductsByCategoryForBuyer(@RequestParam("category") String category) {
         List<Product> products;
 
-        // If no category is selected, show all products
         if (category == null || category.isEmpty()) {
             products = productService.getAllProducts();
         } else {
@@ -157,12 +143,10 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    // Search products by name
     @GetMapping("/searchByNameOrBrand")
     public ResponseEntity<List<Product>> searchProductsByNameOrBrand(@RequestParam(value = "query", required = false) String query) {
         List<Product> products;
 
-        // If no name is provided, show all products
         if (query == null || query.isEmpty()) {
             products = productService.getAllProducts();
         } else {

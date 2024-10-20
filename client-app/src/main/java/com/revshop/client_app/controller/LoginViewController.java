@@ -27,7 +27,6 @@ public class LoginViewController {
 
     @GetMapping("/login")
     public String showLoginPage(Model model) {
-        // Clear any existing session data
         model.addAttribute("message", "");
         return "login";
     }
@@ -43,41 +42,38 @@ public class LoginViewController {
         b1.setPassword(password);
 
         try {
-            // Attempt seller login
             Seller seller = restTemplate.postForObject(loginUrl, s1, Seller.class);
             System.out.println("Seller response: " + seller.getEmail()); // Debug line
 
             if (seller.getBusinessName() != null) {
                 session.setAttribute("loggedInUser", seller.getId());
                 session.setAttribute("userType", "seller");
-                return "redirect:/revshop/show"; // Redirect to seller's dashboard
+                return "redirect:/revshop/show"; 
             }
 
-            // Attempt buyer login
             Buyer buyer = restTemplate.postForObject(loginUrl, b1, Buyer.class);
-            System.out.println("Buyer response: " + buyer); // Debug line
+            System.out.println("Buyer response: " + buyer.getEmail()); // Debug line
 
             if (buyer != null) {
                 session.setAttribute("loggedInUser", buyer.getBuyer_id());
                 session.setAttribute("userType", "buyer");
-                return "redirect:/revshop/displayProducts"; // Redirect to buyer's dashboard
+                return "redirect:/revshop/displayProducts"; 
             }
 
         } catch (Exception e) {
             model.addAttribute("message", "Error during login: " + e.getMessage());
-            e.printStackTrace(); // Log the stack trace
+            e.printStackTrace(); 
         }
 
         model.addAttribute("message", "Invalid login credentials");
-        return "login"; // Return to login page if credentials are invalid
+        return "login"; 
     }
 
 
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        // Invalidate the session to log out
         session.invalidate();
-        return "redirect:/revshop/login"; // Redirect to login page
+        return "redirect:/revshop/login"; 
     }
 }

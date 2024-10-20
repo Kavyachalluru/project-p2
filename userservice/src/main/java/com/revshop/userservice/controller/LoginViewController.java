@@ -24,26 +24,22 @@ public class LoginViewController {
     @Autowired
     private SellerService sellerService;
 
-    // Login endpoint for both buyers and sellers
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password, HttpSession session) {
-        // Check if the user is a seller
         Optional<Seller> seller = sellerService.validateSeller(email, password);
         if (seller.isPresent()) {
             session.setAttribute("loggedInUser", seller.get().getId());
-            System.out.println("seller3########");// Store the seller in session
+            System.out.println("seller3########");
             return ResponseEntity.ok(seller);
         }
         
-        // Check if the user is a buyer
         Optional<Buyer> buyer = buyerService.validateBuyer(email, password);
         if (buyer.isPresent()) {
             session.setAttribute("loggedInUser", buyer.get().getBuyer_id()); 
-            System.out.println("buyer########");// Store the buyer in session
+            System.out.println("buyer########");
             return ResponseEntity.ok(buyer);
         }
         
-        // Return error if neither found
         
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
     }

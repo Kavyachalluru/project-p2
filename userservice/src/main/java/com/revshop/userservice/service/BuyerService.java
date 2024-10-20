@@ -34,5 +34,8 @@ public class BuyerService {
 		buyer.setRegistrationDate(LocalDateTime.now());
 		return buyer_repo.save(buyer);
 	}
+	public Buyer getBuyerById(Long id) {
+		return buyer_repo.findById(id).get();
+	}
 	
 }
