@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Review</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Submit a Review</h1>
+        <form th:action="@{/reviews}" method="post" th:object="${review}">
+            <div class="form-group">
+                <label for="productId">Product ID:</label>
+                <input type="text" id="productId" class="form-control" th:field="*{productId}" placeholder="Enter Product ID" required>
+            </div>
+            <div class="form-group">
+                <label for="buyerId">Your Buyer ID:</label>
+                <input type="text" id="buyerId" class="form-control" th:field="*{buyerId}" placeholder="Enter your Buyer ID" required>
+            </div>
+            <div class="form-group">
+                <label for="reviewText">Review:</label>
+                <textarea id="reviewText" class="form-control" rows="4" th:field="*{reviewText}" placeholder="Write your review here..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rating">Rating (1-5):</label>
+                <select id="rating" class="form-control" th:field="*{rating}" required>
+                    <option value="" disabled selected>Select Rating</option>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Review</button>
+        </form>
+    </div>
+</body>
+</html>

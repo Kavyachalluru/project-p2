@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a Review</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+
+        /* Consistent button styling */
+        .btn-success, .btn-danger {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        .review-section {
+            margin-top: 40px;
+        }
+
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+        }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 30px;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .star-rating input[type="radio"]:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc700;
+        }
+
+        .navbar {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            background-color: #b7e0d6;
+        }
+
+        .navbar-brand img {
+            width: 160px;
+        }
+
+        .nav-link.active {
+            color: #561ad7;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: rgb(0, 0, 0) !important;
+            font-size: 17px;
+            font-weight: bold;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+
+        .nav-link:hover::after {
+            width: 45%;
+            left: 0;
+            right: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: #a39595;">
+        <a class="navbar-brand" href="/revshop/home">
+            <img src="https://i.postimg.cc/T2nXh20S/REVSHOP-main2.png" alt="RevShop">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/home">Home</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/displayProducts">Shop</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/orderitems">Your Orders</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/favourites/buyer">Wishlist</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" href="/revshop/home">LogOut</a></li>
+                <li class="nav-item mx-5">
+                    <a class="nav-link" href="/revshop/cart">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+                             class="bi bi-bag" viewBox="0 0 16 16">
+                            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Add a Review Section -->
+    <div class="container mt-5">
+        <h2 class="text-center">Add Your Review</h2>
+
+        <!-- Review Form -->
+        <form th:action="@{/revshop/reviews/add}" method="post" th:onsubmit="return window.location.reload()">
+            <input type="hidden" name="productId" th:value="${productId}"/>
+            <input type="hidden" name="orderId" th:value="${orderId}"/>
+
+            <div class="form-group">
+                <label for="comment">Your Review:</label>
+                <textarea name="comment" id="comment" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required/><label for="star5">&#9733;</label>
+                    <input type="radio" id="star4" name="rating" value="4"/><label for="star4">&#9733;</label>
+                    <input type="radio" id="star3" name="rating" value="3"/><label for="star3">&#9733;</label>
+                    <input type="radio" id="star2" name="rating" value="2"/><label for="star2">&#9733;</label>
+                    <input type="radio" id="star1" name="rating" value="1"/><label for="star1">&#9733;</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit Review</button>
+        </form>
+
+        <!-- Existing Reviews Section -->
+        <div class="review-section">
+            <h4>Existing Reviews for this Product</h4>
+            <div th:if="${#lists.isEmpty(reviews)}">
+                <p>No reviews available for this product yet.</p>
+            </div>
+            <div th:each="review : ${reviews}">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p><strong>Rating:</strong> <span th:text="${review.rating}"></span></p>
+                        <p><strong>Comment:</strong> <span th:text="${review.comment}"></span></p>
+
+                        <!-- Delete Review Button -->
+                        <form th:action="@{/revshop/reviews/delete/{id}(id=${review.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="productId" th:value="${productId}"/>
+                            <input type="hidden" name="orderId" th:value="${orderId}"/>
+                            <input type="hidden" name="_method" value="delete"/>
+                            <button class="btn btn-danger" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
