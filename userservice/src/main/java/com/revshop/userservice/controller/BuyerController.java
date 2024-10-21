@@ -64,6 +64,10 @@ public class BuyerController {
         return new ResponseEntity<>("Buyer not found in session", HttpStatus.UNAUTHORIZED);
     }
     
-    
+    @GetMapping("/buyers/{id}")
+    public ResponseEntity<Buyer> getBuyerById(@PathVariable Long id) {
+        Buyer buyer = buyerService.getBuyerById(id); // Logic to find buyer by ID
+        return new ResponseEntity<>(buyer, HttpStatus.OK);
+    }
 
 }
