@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -96,10 +97,11 @@ public class OrderController {
         }
 
         Product product = productResponse.getBody();
-
+        System.out.println("ORDERS:::"+product.getSeller().getId());
         // Create and populate OrderDTO
         OrdersDTO orderDto = new OrdersDTO();
         orderDto.setBuyerId(buyerId);
+        orderDto.setSellerId(product.getSeller().getId());
         orderDto.setTotalPrice(totalPrice);
         orderDto.setShippingAddress(shippingAddress);
         orderDto.setPaymentMethod(paymentMethod);
@@ -178,5 +180,43 @@ public class OrderController {
         return "redirect:/revshop/orderitems"; // Redirect to the order items page
     }
     	
+//    @GetMapping("/orders")
+//    public String viewOrdersForSeller(Model model, HttpSession session) {
+//    	Long sellerId = (Long) session.getAttribute("loggedInUser");
+//    	logger.info("seller in order : {}" + sellerId);
+//    	if (sellerId == null) {
+//            model.addAttribute("message", "You need to log in to place an order.");
+//            return "redirect:/revshop/login";
+//        }
+//    	
+//        OrdersDTO[] orders = restTemplate.getForObject(ORDER_SERVICE_URL + "/orders/" + sellerId, OrdersDTO[].class);
+//
+//        model.addAttribute("orders", List.of(orders)); 
+//        return "viewSellerOrders"; 
+//    }
     
+    @GetMapping("/orders")
+    public String viewOrdersForSeller(Model model, HttpSession session) {
+        Long sellerId = (Long) session.getAttribute("loggedInUser");
+        logger.info("Seller ID in order: {}", sellerId);
+        
+        if (sellerId == null) {
+            model.addAttribute("message", "You need to log in to view orders.");
+            return "redirect:/revshop/login";
+        }
+
+        OrdersDTO[] response = restTemplate.getForObject(ORDER_SERVICE_URL + "/orders/" + sellerId, OrdersDTO[].class);
+            
+        if (response.length > 0 && response[0].getBuyerId() != 0) {
+            List<OrdersDTO> orders = Arrays.asList(response);
+            model.addAttribute("orders", orders);
+            logger.info("Orders found for sellerId {}: {}", sellerId, orders);
+        } else {
+            model.addAttribute("message", "Unable to retrieve orders for the seller.");
+            logger.warn("Failed to retrieve orders for sellerId {}", sellerId);
+        }
+
+        return "viewSellerOrders"; 
+    }
+
 }

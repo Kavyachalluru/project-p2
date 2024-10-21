@@ -156,10 +156,10 @@ public class ProductController {
 
         // If no category is selected, show all products
         if (category == null || category.isEmpty()) {
-            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products", Product[].class); // Fetch all products
+            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/search", Product[].class); 
         } else {
             // Otherwise, filter products by category
-            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products/category/" + category, Product[].class);
+            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/search?category=" + category, Product[].class);
         }
 
         model.addAttribute("products", List.of(products));
@@ -171,10 +171,10 @@ public class ProductController {
         Product[] products;
 
         if (query == null || query.isEmpty()) {
-            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products", Product[].class); // Fetch all products if no search term
+            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/searchByNameOrBrand", Product[].class); // Fetch all products if no search term
         } else {
             // Search products by name using the service method
-            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products/search?query=" + query, Product[].class);
+            products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/searchByNameOrBrand?query=" + query, Product[].class);
         }
 
         model.addAttribute("products", List.of(products));
@@ -183,7 +183,7 @@ public class ProductController {
 
     @GetMapping("/filterByDiscountPrice")
     public String filterProductsByDiscountPrice(@RequestParam("mindiscountPrice") double mindiscountPrice, @RequestParam("maxdiscountPrice") double maxdiscountPrice, Model model) {
-        Product[] products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products/filter?minDiscountPrice=" + mindiscountPrice + "&maxDiscountPrice=" + maxdiscountPrice, Product[].class);
+        Product[] products = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/filterByDiscountPrice?mindiscountPrice=" + mindiscountPrice + "&maxdiscountPrice=" + maxdiscountPrice, Product[].class);
         model.addAttribute("products", List.of(products));
         return "showProducts";
     }
