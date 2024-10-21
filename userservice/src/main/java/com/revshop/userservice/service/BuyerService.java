@@ -38,4 +38,9 @@ public class BuyerService {
 		return buyer_repo.findById(id).get();
 	}
 	
+    public Buyer loginUser(Buyer buyer) {
+        // Assuming you have a method in your repository to find a buyer by email and password
+        return buyer_repo.findByEmailAndPassword(buyer.getEmail(), buyer.getPassword());
+    }
+	
 }
