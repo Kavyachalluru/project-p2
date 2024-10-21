@@ -46,7 +46,8 @@ public class OrderController {
        
     @GetMapping("/orders/{sellerId}")
     public ResponseEntity<List<OrdersDTO>> viewOrdersBySeller(@PathVariable Long sellerId) {
-        List<OrdersDTO> orders = orderService.getOrdersBySellerId(sellerId); 
+        System.out.println(sellerId);
+    	List<OrdersDTO> orders = orderService.getOrdersBySellerId(sellerId); 
         logger.info("order body : {}" + orders);
         if (orders.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

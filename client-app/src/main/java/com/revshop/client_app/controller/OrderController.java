@@ -3,10 +3,12 @@ package com.revshop.client_app.controller;
 import com.revshop.client_app.dto.OrderItemDTO;
 import com.revshop.client_app.dto.OrdersDTO;
 import com.revshop.client_app.model.Buyer;
+import com.revshop.client_app.model.Cart;
 import com.revshop.client_app.model.OrderItems;
 //import com.revshop.client_app.model.OrderRequest; // Create a model for order request
 import com.revshop.client_app.model.Orders; 
 import com.revshop.client_app.model.Product;
+import com.revshop.client_app.repository.CartRepository;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -40,8 +42,12 @@ public class OrderController {
 	
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    CartRepository cartRepository;
     
     private static final String ORDER_SERVICE_URL = "http://localhost:9090/revshop";
+    private static final String CART_SERVICE_URL = "http://localhost:8082/revshop";
+    private static final String USER_SERVICE_URL = "http://localhost:8081/revshop"; // Replace with actual URL of user service
 
     @GetMapping("/orderform")
     public String showOrderForm(@RequestParam Long productId, 
@@ -78,7 +84,6 @@ public class OrderController {
 
         return "orders2"; // Return the view name for the order form page
     }
-
     @PostMapping("/addorders")
     public String submitOrder(
             @RequestParam Long productId,
@@ -227,5 +232,58 @@ public class OrderController {
 
         return "viewSellerOrders"; 
     }
+    @PostMapping("/addorder")
+    public String submitOrder(
+            @ModelAttribute("order") OrdersDTO orderDto,
+            HttpSession session,
+            Model model) {
+        Long buyerId = (Long) session.getAttribute("loggedInUser");
+        if (buyerId == null) {
+            model.addAttribute("message", "You need to log in to place an order.");
+            return "redirect:/revshop/login";
+        }
+         List<OrderItemDTO> cartItems = orderDto.getOrderItems();
+        if (cartItems == null || cartItems.isEmpty()) {
+            model.addAttribute("message", "Your cart is empty.");
+            return "redirect:/revshop/cart"; // Redirect to the cart page if empty
+        }
+        orderDto.setBuyerId(buyerId);
+        double totalOrderPrice = 0.0;
+        List<OrderItemDTO> orderItems = new ArrayList<>();
+        for (OrderItemDTO item : cartItems) {
+            Long productId = item.getProductId();
+            System.out.println(productId + "  from cart the product");
+            int quantity = item.getQuantity();
 
-}
+            Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + productId, Product.class);
+            if (product == null) {
+                model.addAttribute("message", "Product not found for ID: " + productId);
+                return "redirect:/revshop/cart";
+            }
+
+            double itemTotalPrice = product.getDiscountPrice() * quantity;
+            totalOrderPrice += itemTotalPrice;
+
+            // Create OrderItemDTO and set details
+            OrderItemDTO orderItemDto = new OrderItemDTO();
+            orderItemDto.setProductId(productId);
+            orderItemDto.setQuantity(quantity);
+            orderItemDto.setTotalPrice(itemTotalPrice);
+            orderItems.add(orderItemDto);
+        }
+
+        // Set total price and order items in the order DTO
+        orderDto.setTotalPrice(totalOrderPrice);
+        orderDto.setOrderItems(orderItems);
+
+        // Send the order to the order service
+        String orderServiceUrl = "http://localhost:9090/revshop/place"; // Adjust URL as necessary
+        ResponseEntity<Orders> response = restTemplate.postForEntity(orderServiceUrl, orderDto, Orders.class);
+        // Add success message to the model
+        model.addAttribute("message", "Order placed successfully!");
+        return "OrderConfirmation"; // Return the order confirmation view
+    }
+
+    }
+
+

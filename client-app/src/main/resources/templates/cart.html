@@ -180,6 +180,8 @@
         
         <div th:each="cart: ${cart}">
             <input type="hidden" name="cartItems[__${cartStat.index}__].productId" th:value="${cart.product.id}" />
+             <input type="hidden" name="cartItems[__${cartStat.index}__].product.name" th:value="${cart.product.name}" />
+              <input type="hidden" name="cartItems[__${cartStat.index}__].product.discountPrice" th:value="${cart.product.discountPrice}" />
             <input type="hidden" name="cartItems[__${cartStat.index}__].quantity" th:value="${cart.quantity}" />
             <input type="hidden" name="totalPrice" th:value="${totalPrice}" />
         </div>

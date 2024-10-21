@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+import com.revshop.client_app.dto.OrdersDTO;
 import com.revshop.client_app.model.Cart;
 import com.revshop.client_app.model.Product;
 import com.revshop.client_app.repository.CartRepository;
@@ -49,6 +50,7 @@ public class CartController {
 //        
 //       List<Cart> cartItems = response.getBody() != null ? Arrays.asList(response.getBody()) : new ArrayList<>();
         System.out.println(cartItems.size()+"  "+cartItems.get(0).toString());
+        System.out.println(cartItems.size()+" size of cart");
         for (Cart cart : cartItems) {
         	//System.out.println(cart.getProduct().getId()+">>>>>>>>>>cart productid");
             Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + cart.getProduct_id(), Product.class);
@@ -94,9 +96,17 @@ public class CartController {
         restTemplate.delete(CART_SERVICE_URL + "/cart/remove/" + cartId);
         return "redirect:/revshop/cart";
     }
+    
     @GetMapping("/checkout")
-    public String showCart(Model model,@RequestParam("totalPrice") double totalPrice, HttpSession session) {
-         model.addAttribute("totalPrice",totalPrice);
-        return "orders"; // Return the view name for the cart page
+    public String showCheckoutPage(HttpSession session, Model model,@RequestParam("totalPrice")double totalPrice) {
+        Long buyerId = (Long) session.getAttribute("loggedInUser");
+        if (buyerId == null) {
+            return "redirect:/revshop/login";
+        }
+        List<Cart> cartItems = cartRepository.findByBuyerId(buyerId);
+        model.addAttribute("cartItems", cartItems);
+       // model.addAttribute("order", new OrdersDTO());
+        model.addAttribute("totalPrice",totalPrice);
+        return "orders"; // Your checkout template
     }
 }
