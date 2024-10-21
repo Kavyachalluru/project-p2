@@ -36,7 +36,7 @@ public class CartController {
     CartRepository cartRepository;
 
     private static final String USER_SERVICE_URL = "http://localhost:8081/revshop"; // Replace with actual URL of user service
-    private static final String CART_SERVICE_URL = "http://localhost:8082/revshop"; // Replace with actual URL of product service
+    private static final String CART_SERVICE_URL = "http://localhost:8888/revshop"; // Replace with actual URL of product service
 
 
     @GetMapping("/cart")
@@ -48,7 +48,7 @@ public class CartController {
 //                CART_SERVICE_URL + "/cart/" + buyerId, Cart[].class);
 //        
 //       List<Cart> cartItems = response.getBody() != null ? Arrays.asList(response.getBody()) : new ArrayList<>();
-        System.out.println(cartItems.size()+"  "+cartItems.get(0).toString());
+        //System.out.println(cartItems.size()+"  "+cartItems.get(0).toString());
         for (Cart cart : cartItems) {
         	//System.out.println(cart.getProduct().getId()+">>>>>>>>>>cart productid");
             Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + cart.getProduct_id(), Product.class);
