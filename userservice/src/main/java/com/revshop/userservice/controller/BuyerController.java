@@ -54,7 +54,7 @@ public class BuyerController {
             existingBuyer.setPhoneNumber(updatedBuyer.getPhoneNumber());
             existingBuyer.setPassword(updatedBuyer.getPassword());
 
-            buyerService.UpdateUser(existingBuyer);
+            buyerService.updateUser(existingBuyer);
 
             // Update session
             session.setAttribute("loggedInUser", existingBuyer);

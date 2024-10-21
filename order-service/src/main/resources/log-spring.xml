@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <!-- Define the pattern for the log entries -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File appender: Logs are saved to a file -->
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/order_service.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logs/order_service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory> <!-- Keep logs for 30 days -->
+        </rollingPolicy>
+    </appender>
+
+    <!-- Root logger for general application logging -->
+    <root level="INFO">
+        <appender-ref ref="console" />
+        <appender-ref ref="fileAppender" />
+    </root>
+
+    <!-- Logger for OrderService with DEBUG level -->
+    <logger name="com.revshop.order_service.service.OrderService" level="DEBUG" />
+
+    <!-- Add other specific loggers if needed -->
+    <!-- <logger name="com.revshop.order_service.repository" level="INFO" /> -->
+
+</configuration>

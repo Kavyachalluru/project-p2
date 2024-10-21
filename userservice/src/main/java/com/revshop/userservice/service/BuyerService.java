@@ -3,39 +3,131 @@ package com.revshop.userservice.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revshop.userservice.Repository.BuyerRepository;
 import com.revshop.userservice.entity.Buyer;
 
-
-
 @Service
 public class BuyerService {
-	
-	@Autowired
-	private BuyerRepository buyer_repo;
-		
-	public Buyer registerUser(Buyer buyer) {
-		buyer.setRegistrationDate(LocalDateTime.now());
-		return buyer_repo.save(buyer);
-	}
-	public Optional<Buyer> validateBuyer(String email, String password) {
-        Buyer buyer = buyer_repo.findByEmailAndPassword(email,password);
-        // Perform password validation (you may want to hash passwords in real scenarios)
+
+    private static final Logger logger = LoggerFactory.getLogger(BuyerService.class);
+
+    @Autowired
+    private BuyerRepository buyer_repo;
+
+    public Buyer registerUser(Buyer buyer) {
+        buyer.setRegistrationDate(LocalDateTime.now());
+        Buyer savedBuyer = buyer_repo.save(buyer);
+        logger.info("Registered new buyer with email: {}", buyer.getEmail());
+        return savedBuyer;
+    }
+
+    public Optional<Buyer> validateBuyer(String email, String password) {
+        logger.info("Validating buyer with email: {}", email);
+        Buyer buyer = buyer_repo.findByEmailAndPassword(email, password);
+        if (buyer != null) {
+            logger.info("Buyer validation successful for email: {}", email);
+        } else {
+            logger.warn("Buyer validation failed for email: {}", email);
+        }
         return Optional.ofNullable(buyer);
     }
-	
-	public Buyer getBuyerByEmail(String email) {
-		return buyer_repo.findByEmail(email).get();
-	}
-	public Buyer UpdateUser(Buyer buyer) {
-		buyer.setRegistrationDate(LocalDateTime.now());
-		return buyer_repo.save(buyer);
-	}
-	public Buyer getBuyerById(Long id) {
-		return buyer_repo.findById(id).get();
-	}
-	
+
+    public Buyer getBuyerByEmail(String email) {
+        logger.info("Fetching buyer by email: {}", email);
+        Buyer buyer = buyer_repo.findByEmail(email).orElse(null);
+        if (buyer != null) {
+            logger.info("Buyer found with email: {}", email);
+        } else {
+            logger.warn("No buyer found with email: {}", email);
+        }
+        return buyer;
+    }
+
+    public Buyer updateUser(Buyer buyer) {
+        buyer.setRegistrationDate(LocalDateTime.now());
+        Buyer updatedBuyer = buyer_repo.save(buyer);
+        logger.info("Updated buyer with email: {}", buyer.getEmail());
+        return updatedBuyer;
+    }
+
+    public Buyer getBuyerById(Long id) {
+        logger.info("Fetching buyer by ID: {}", id);
+        Buyer buyer = buyer_repo.findById(id).orElse(null);
+        if (buyer != null) {
+            logger.info("Buyer found with ID: {}", id);
+        } else {
+            logger.warn("No buyer found with ID: {}", id);
+        }
+        return buyer;
+    }
 }
+
+
+//package com.revshop.userservice.service;
+//
+//import java.time.LocalDateTime;
+//import java.util.Optional;
+//
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.stereotype.Service;
+//
+//import com.revshop.userservice.entity.Buyer;
+//import com.revshop.userservice.Repository.BuyerRepository;
+//
+//@Service
+//public class BuyerService {
+//
+//	private static final Logger logger = LoggerFactory.getLogger(BuyerService.class);
+//
+//	@Autowired
+//	private BuyerRepository buyer_repo;
+//
+//	// Register a new buyer
+//	public Buyer registerUser(Buyer buyer) {
+//		buyer.setRegistrationDate(LocalDateTime.now());
+//		Buyer savedBuyer = buyer_repo.save(buyer);
+//		logger.info("Registered new buyer with email: {}", buyer.getEmail());
+//		return savedBuyer;
+//	}
+//
+//	// Validate buyer by email and password
+//	public boolean validateBuyer(String email, String password) {
+//		logger.debug("Validating buyer with email: {}", email);
+//		Buyer buyer = buyer_repo.findByEmailAndPassword(email, password);
+//		if (buyer != null && buyer.getPassword().equals(password)) {
+//			logger.info("Buyer validation successful for email: {}", email);
+//			return true;
+//		} else {
+//			logger.warn("Buyer validation failed for email: {}", email);
+//			return false;
+//		}
+//	}
+//
+//	// Fetch buyer by email
+//	public void getBuyerByEmail(String email) {
+//		logger.debug("Fetching buyer with email: {}", email);
+//		Optional<Buyer> buyer = buyer_repo.findByEmail(email);
+//		if (buyer.isPresent()) {
+//			logger.info("Buyer found with email: {}", email);
+//			return buyer.get();
+//		} else {
+//			logger.error("No buyer found with email: {}", email);
+//		}
+//	}
+//
+//	// Update buyer details
+//	public Buyer updateUser(Buyer buyer) {
+//		buyer.setRegistrationDate(LocalDateTime.now());
+//		Buyer updatedBuyer = buyer_repo.save(buyer);
+//		logger.info("Updated buyer with email: {}", buyer.getEmail());
+//		return updatedBuyer;
+//	}
+//}
+//
