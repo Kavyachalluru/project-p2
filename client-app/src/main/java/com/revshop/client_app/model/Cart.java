@@ -1,71 +1,101 @@
 package com.revshop.client_app.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerator;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property="id")
-public class Cart {
-    private Long id;
-    private Long buyerId;
-    //private Long productId; 
-    @JsonProperty("property")
-    private Product product;
-    private int quantity;
-    private double price;
 
-    public Long getId() {
-        return id;
-    }
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
+	@Entity
+	public class Cart {
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	        private Long id;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	       
+	        private Long buyer_id;
+	        //@OneToMany
+	        private Long product_id;
+	        @Transient
+	        private Product product;
 
-    public Long getBuyerId() {
-        return buyerId;
-    }
+	        //@Min(value = 1, message = "Quantity must be at least 1")
+	        private int quantity;
 
-    public void setBuyerId(Long buyerId) {
-        this.buyerId = buyerId;
-    }
+	        private double price;  
+	        
+			
 
-//    public Long getProductId() {
-//        return productId;
-//    }
-//
-//    public void setProductId(Long productId) {
-//        this.productId = productId;
-//    }
-//
-    public Product getProduct() {
-        return product;
-    }
+			public Long getId() {
+				return id;
+			}
 
-    public void setProduct(Product product) {
-        this.product = product;
-        
-        }
-   
-    public int getQuantity() {
-        return quantity;
-    }
+			public void setId(Long id) {
+				this.id = id;
+			}
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+			public Long getBuyer_id() {
+				return buyer_id;
+			}
 
-    public double getPrice() {
-        return price;
-    }
+			public void setBuyer_id(Long buyer_id) {
+				this.buyer_id = buyer_id;
+			}
 
-    public void setPrice(double price) {
-        this.price = price;
-    }
+			public Long getProduct_id() {
+				return product_id;
+			}
 
-    // Calculate total price for this cart item
-    public double getTotalPrice() {
-        return this.price * this.quantity;
-    }
-}
+			public void setProduct_id(Long product_id) {
+				this.product_id = product_id;
+			}
+
+			public int getQuantity() {
+				return quantity;
+			}
+
+			public void setQuantity(int quantity) {
+				this.quantity = quantity;
+			}
+
+			public double getPrice() {
+				return price;
+			}
+
+			public void setPrice(double price) {
+				this.price = price;
+			}
+
+			public Product getProduct() {
+				return product;
+			}
+
+			public void setProduct(Product product) {
+				this.product = product;
+			}
+
+			public Cart() {
+				super();
+				this.id = id;
+				this.buyer_id = buyer_id;
+				this.product_id = product_id;
+				this.quantity = quantity;
+				//this.price = price;
+			}
+
+			@Override
+			public String toString() {
+				return "Cart [id=" + id + ", buyer_id=" + buyer_id + ", product_id=" + product_id + ", quantity=" + quantity
+						+ ", price=" + price + "]";
+			}
+
+			
+			
+	    }

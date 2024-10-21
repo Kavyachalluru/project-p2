@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.revshop.client_app.model.Cart;
 import com.revshop.client_app.model.Product;
+import com.revshop.client_app.repository.CartRepository;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -31,6 +32,8 @@ public class CartController {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    CartRepository cartRepository;
 
     private static final String USER_SERVICE_URL = "http://localhost:8081/revshop"; // Replace with actual URL of user service
     private static final String CART_SERVICE_URL = "http://localhost:8082/revshop"; // Replace with actual URL of product service
@@ -40,15 +43,15 @@ public class CartController {
     public String getCartItems(HttpSession session, Model model) {
         Long buyerId = (Long) session.getAttribute("loggedInUser");
         System.out.println(buyerId);
-
-        ResponseEntity<Cart[]> response = restTemplate.getForEntity(
-                CART_SERVICE_URL + "/cart/" + buyerId, Cart[].class);
-        
-        List<Cart> cartItems = response.getBody() != null ? Arrays.asList(response.getBody()) : new ArrayList<>();
-        
+        List<Cart> cartItems=cartRepository.findByBuyerId(buyerId);
+//        ResponseEntity<Cart[]> response = restTemplate.getForEntity(
+//                CART_SERVICE_URL + "/cart/" + buyerId, Cart[].class);
+//        
+//       List<Cart> cartItems = response.getBody() != null ? Arrays.asList(response.getBody()) : new ArrayList<>();
+        System.out.println(cartItems.size()+"  "+cartItems.get(0).toString());
         for (Cart cart : cartItems) {
         	//System.out.println(cart.getProduct().getId()+">>>>>>>>>>cart productid");
-            Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + 1, Product.class);
+            Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + cart.getProduct_id(), Product.class);
             cart.setProduct(product);
             cart.setPrice(product.getDiscountPrice());
         }
@@ -69,7 +72,7 @@ public class CartController {
     	Long buyerId=(Long)session.getAttribute("loggedInUser");
     	String url=USER_SERVICE_URL+"/product/"+productId;
     	Product product = restTemplate.getForObject(url, Product.class);
-    	cart.setProduct(product);
+    	//cart.setProduct(product);
     	System.out.println(product.getBrand());
     	
         HttpEntity<Cart> request = new HttpEntity<>(cart);
@@ -84,7 +87,7 @@ public class CartController {
         // Call the Cart Service to update the cart item
         HttpEntity<Cart> request = new HttpEntity<>(cart);
         restTemplate.exchange(CART_SERVICE_URL + "/update", HttpMethod.PUT, request, Cart.class);
-        return "redirect:/revshop/cart?buyerId=" + cart.getBuyerId();
+        return "redirect:/revshop/cart?buyerId=" + cart.getBuyer_id();
     }
     @PostMapping("/cart/remove")
     public String removeFromCart(@RequestParam Long cartId, HttpSession session) {

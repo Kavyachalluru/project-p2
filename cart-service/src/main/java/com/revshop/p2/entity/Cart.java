@@ -5,6 +5,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Min;
 
 @Entity
@@ -14,69 +15,72 @@ public class Cart {
         private Long id;
 
        
-        private Long buyerId;
-        
-        private Long productId;
+        private Long buyer_id;
+        //@OneToMany
+        private Long product_id;
 
         @Min(value = 1, message = "Quantity must be at least 1")
         private int quantity;
 
         private double price;  
-
         
-        public Cart() {}
+		
 
-        public Cart(Long buyerId, Long product, int quantity) {
-            this.buyerId = buyerId;
-            this.productId = productId;
-            this.quantity = quantity;
-            //this.price = product.getDiscountPrice();  // Set price from the product's discount price
-        }
+		public Long getId() {
+			return id;
+		}
 
-        // Getters and Setters
+		public void setId(Long id) {
+			this.id = id;
+		}
 
-        public Long getId() {
-            return id;
-        }
+		public Long getBuyer_id() {
+			return buyer_id;
+		}
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+		public void setBuyer_id(Long buyer_id) {
+			this.buyer_id = buyer_id;
+		}
 
-        public Long getBuyer() {
-            return buyerId;
-        }
+		public Long getProduct_id() {
+			return product_id;
+		}
 
-        public void setBuyer(Long buyerId) {
-            this.buyerId = buyerId;
-        }
+		public void setProduct_id(Long product_id) {
+			this.product_id = product_id;
+		}
 
-        public Long getProduct() {
-            return productId;
-        }
+		public int getQuantity() {
+			return quantity;
+		}
 
-        public void setProduct(Long productId) {
-            this.productId = productId;
-        }
+		public void setQuantity(int quantity) {
+			this.quantity = quantity;
+		}
 
-        public int getQuantity() {
-            return quantity;
-        }
+		public double getPrice() {
+			return price;
+		}
 
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
+		public void setPrice(double price) {
+			this.price = price;
+		}
 
-        public double getPrice() {
-            return price;
-        }
+		public Cart() {
+			super();
+			this.id = id;
+			this.buyer_id = buyer_id;
+			this.product_id = product_id;
+			this.quantity = quantity;
+			this.price = price;
+		}
 
-        public void setPrice(double price) {
-            this.price = price;
-        }
+		@Override
+		public String toString() {
+			return "Cart [id=" + id + ", buyer_id=" + buyer_id + ", product_id=" + product_id + ", quantity=" + quantity
+					+ ", price=" + price + "]";
+		}
 
-        // Calculate total price for this cart item
-        public double getTotalPrice() {
-            return this.price * this.quantity;
-        }
+		
+		
     }

@@ -33,7 +33,7 @@ public class CartController {
         	System.out.println("entering cart");
             return ResponseEntity.ok(new ArrayList<>());
         }
-        System.out.println("ok ---------");
+        System.out.println(cartItems.get(0).toString());
         return ResponseEntity.ok(cartItems); 
     }
 
