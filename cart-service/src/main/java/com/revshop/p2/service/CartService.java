@@ -31,8 +31,8 @@ public class CartService {
 	            if (existingCartItem == null) {
 	                // Create a new Cart item if it doesn't exist
 	                Cart newCartItem = new Cart();
-	                newCartItem.setBuyer(buyerId);
-	                newCartItem.setProduct(productId);
+	                newCartItem.setBuyer_id(buyerId);
+	                newCartItem.setProduct_id(productId);
 	                newCartItem.setQuantity(1);
 	                return cartRepository.save(newCartItem); // Return the newly created Cart object
 	            } else {
