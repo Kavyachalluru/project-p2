@@ -17,6 +17,7 @@ public class Product {
 	private String description;
 	private String image_url;
 	private String discountPercentage;
+	private Seller seller;
 	
 	public String getDiscountPercentage() {
 		return discountPercentage;
@@ -139,5 +140,15 @@ public class Product {
 	public void setImage_url(String image_url) {
 		this.image_url = image_url;
 	}
+
+	public Seller getSeller() {
+		return seller;
+	}
+
+	public void setSeller(Seller seller) {
+		this.seller = seller;
+	}
+	
+	
 
 }
