@@ -59,7 +59,6 @@ public class CartController {
         double totalPrice = cartItems.stream()
                                       .mapToDouble(cart -> cart.getPrice() * cart.getQuantity())
                                       .sum();
-
         model.addAttribute("cart", cartItems);
         model.addAttribute("totalPrice", totalPrice);
         

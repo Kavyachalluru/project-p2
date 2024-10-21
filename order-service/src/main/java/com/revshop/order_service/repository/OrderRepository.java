@@ -14,4 +14,5 @@ import com.revshop.order_service.model.Orders;
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Long> {
     List<Orders> findByBuyerId(Long buyerId);
+    List<Orders> findBySellerId(Long sellerId);
 }

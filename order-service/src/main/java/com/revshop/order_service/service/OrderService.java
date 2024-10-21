@@ -54,38 +54,57 @@ public class OrderService {
     	logger.info("Received orderDTO: {}", orderDTO);
     	logger.info("Received orderDTO buyerId: {}", orderDTO.getBuyerId());
     	
-    	// Check if the buyer exists
-    	// Fetch the buyer details from the User Service using buyerId
         Buyer buyer = userServiceClient.getBuyerById(orderDTO.getBuyerId());
         if (buyer == null) {
             logger.error("Buyer with ID {} does not exist.", orderDTO.getBuyerId());
             throw new IllegalArgumentException("Buyer with ID " + orderDTO.getBuyerId() + " does not exist.");
         }
         logger.info("Retrieved Buyer: {}", buyer);
+        logger.info("Retrieved Seller: {} ", orderDTO.getSellerId());
+
         Orders order = new Orders();
         order.setBuyerId(buyer.getBuyer_id()); // Set only the buyerId
         order.setShippingAddress(orderDTO.getShippingAddress());
         order.setTotalPrice(orderDTO.getTotalPrice());
         order.setPaymentMethod(orderDTO.getPaymentMethod());
+        order.setSellerId(orderDTO.getSellerId());
         
         logger.info("getting buyer id = {}", buyer.getBuyer_id());
-//        Orders order = convertToEntity(orderDTO);
-        logger.info("Attempting to save Order: {}", order);
+        logger.info("Attempting to save Order: {}", order.toString());
 
         try {
             // Save the order
             Orders savedOrder = orderRepository.save(order);
             logger.info("Saved Order: {}", savedOrder);
+            logger.info("ORDER::: {}", savedOrder);
+
             
             // Convert and save order items
             List<OrderItems> orderItems = new ArrayList<>();
             for (OrderItemDTO orderItemDTO : orderDTO.getOrderItems()) {
                 OrderItems orderItem = convertToEntity(orderItemDTO);
-                orderItem.setOrder(savedOrder);  // Associate order with order items
+                orderItem.setOrder(savedOrder); 
+                logger.info("ORDER::: {}", savedOrder);
+
+                Product product = userServiceClient.getProductById(orderItemDTO.getProductId());
+                if (product == null) {
+                    throw new IllegalArgumentException("Product with ID " + orderItemDTO.getProductId() + " does not exist.");
+                }
+                logger.info("ORDER::: {}", savedOrder);
+
+                logger.info("Retrieved Product: {}", product);
+                logger.info("product name : {}" + product.getName());
+                logger.info("sellerId in products : {} " + product.getSeller());
+                order.setSellerId(product.getSeller().getId());
+                logger.info("ORDER::: {}", savedOrder);
+
                 orderItems.add(orderItem);
             }
+            logger.info("ORDER::: {}", savedOrder);
+
             orderItemRepository.saveAll(orderItems);
-            
+            logger.info("Returning Saved Order: {}", savedOrder);
+
             return savedOrder;
         } catch (DataIntegrityViolationException e) {
             logger.error("Data Integrity Violation: {}", e.getMessage());
@@ -147,5 +166,17 @@ public class OrderService {
 
         return ordersDTOList;
      }
+    
+    public List<OrdersDTO> getOrdersBySellerId(Long sellerId) {
+        List<Orders> orders = orderRepository.findBySellerId(sellerId); 
+        logger.info("Number of orders found for sellerId {}: {}", sellerId, orders.size());
+        List<OrdersDTO> ordersDTOList = new ArrayList<>();
+        for (Orders order : orders) {
+            OrdersDTO dto = convertOrderToDTO(order);
+            ordersDTOList.add(dto);
+        }
+        logger.info("ordersDTOList : {}" + ordersDTOList);
+        return ordersDTOList;
+    }
     
 }

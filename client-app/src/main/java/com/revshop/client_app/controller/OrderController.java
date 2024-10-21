@@ -5,7 +5,7 @@ import com.revshop.client_app.dto.OrdersDTO;
 import com.revshop.client_app.model.Buyer;
 import com.revshop.client_app.model.OrderItems;
 //import com.revshop.client_app.model.OrderRequest; // Create a model for order request
-import com.revshop.client_app.model.Orders; // Order entity
+import com.revshop.client_app.model.Orders; 
 import com.revshop.client_app.model.Product;
 
 import jakarta.servlet.http.HttpSession;
@@ -17,12 +17,14 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -30,6 +32,11 @@ import java.util.List;
 public class OrderController {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderController.class);  
+	private final SimpMessagingTemplate messagingTemplate;
+   public OrderController (SimpMessagingTemplate messagingTemplate) {
+        this.messagingTemplate = messagingTemplate;
+    }
+
 	
     @Autowired
     private RestTemplate restTemplate;
@@ -44,6 +51,7 @@ public class OrderController {
                                 Model model) {
 
         // Create a new order instance
+    	System.out.println("Buy:::"+productId);
         Orders order = new Orders(); 
         order.setOrderItems(new ArrayList<>());
         order.setTotalPrice(price);
@@ -51,7 +59,7 @@ public class OrderController {
         // Use RestTemplate to get the product details from the ProductService
         String productServiceUrl = "http://localhost:8081/revshop/product/" + productId;
         Product product = restTemplate.getForObject(productServiceUrl, Product.class);
-        
+       logger.info(product.getName());
         // Store the product in the session for future use
         model.addAttribute("product", product);
         
@@ -96,10 +104,11 @@ public class OrderController {
         }
 
         Product product = productResponse.getBody();
-
+        System.out.println("ORDERS:::"+product.getSeller().getId());
         // Create and populate OrderDTO
         OrdersDTO orderDto = new OrdersDTO();
         orderDto.setBuyerId(buyerId);
+        orderDto.setSellerId(product.getSeller().getId());
         orderDto.setTotalPrice(totalPrice);
         orderDto.setShippingAddress(shippingAddress);
         orderDto.setPaymentMethod(paymentMethod);
@@ -120,6 +129,8 @@ public class OrderController {
         ResponseEntity<Orders> response = restTemplate.postForEntity(orderServiceUrl, orderDto, Orders.class);
 
         if (response.getStatusCode() == HttpStatus.CREATED) {
+        	 messagingTemplate.convertAndSend("/topic/notifications", 
+        	             product.getName() + " has been purchased!");
             model.addAttribute("message", "Order placed successfully!");
             return "redirect:/revshop/displayProducts";
         } else {
@@ -178,5 +189,43 @@ public class OrderController {
         return "redirect:/revshop/orderitems"; // Redirect to the order items page
     }
     	
+//    @GetMapping("/orders")
+//    public String viewOrdersForSeller(Model model, HttpSession session) {
+//    	Long sellerId = (Long) session.getAttribute("loggedInUser");
+//    	logger.info("seller in order : {}" + sellerId);
+//    	if (sellerId == null) {
+//            model.addAttribute("message", "You need to log in to place an order.");
+//            return "redirect:/revshop/login";
+//        }
+//    	
+//        OrdersDTO[] orders = restTemplate.getForObject(ORDER_SERVICE_URL + "/orders/" + sellerId, OrdersDTO[].class);
+//
+//        model.addAttribute("orders", List.of(orders)); 
+//        return "viewSellerOrders"; 
+//    }
     
+    @GetMapping("/orders")
+    public String viewOrdersForSeller(Model model, HttpSession session) {
+        Long sellerId = (Long) session.getAttribute("loggedInUser");
+        logger.info("Seller ID in order: {}", sellerId);
+        
+        if (sellerId == null) {
+            model.addAttribute("message", "You need to log in to view orders.");
+            return "redirect:/revshop/login";
+        }
+
+        OrdersDTO[] response = restTemplate.getForObject(ORDER_SERVICE_URL + "/orders/" + sellerId, OrdersDTO[].class);
+            
+        if (response.length > 0 && response[0].getBuyerId() != 0) {
+            List<OrdersDTO> orders = Arrays.asList(response);
+            model.addAttribute("orders", orders);
+            logger.info("Orders found for sellerId {}: {}", sellerId, orders);
+        } else {
+            model.addAttribute("message", "Unable to retrieve orders for the seller.");
+            logger.warn("Failed to retrieve orders for sellerId {}", sellerId);
+        }
+
+        return "viewSellerOrders"; 
+    }
+
 }

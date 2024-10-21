@@ -164,14 +164,14 @@ public class Product {
 		this.seller = seller;
 	}
 
-//	@Override
-//	public String toString() {
-//		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", gender=" + gender + ", price=" + price
-//				+ ", discountPrice=" + discountPrice + ", quantity=" + quantity + ", threshold=" + threshold
-//				+ ", category=" + category + ", subCategory=" + subCategory + ", color=" + color + ", size=" + size
-//				+ ", description=" + description + ", image_url=" + image_url + ", discountPercentage="
-//				+ discountPercentage + ", seller=" + sellerId + "]";
-//	}
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", name=" + name + ", brand=" + brand + ", gender=" + gender + ", price=" + price
+				+ ", discountPrice=" + discountPrice + ", quantity=" + quantity + ", threshold=" + threshold
+				+ ", category=" + category + ", subCategory=" + subCategory + ", color=" + color + ", size=" + size
+				+ ", description=" + description + ", image_url=" + image_url + ", discountPercentage="
+				+ discountPercentage + ", seller=" + seller + "]";
+	}
 	
 
 

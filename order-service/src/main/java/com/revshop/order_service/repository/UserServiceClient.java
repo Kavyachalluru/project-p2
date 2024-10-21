@@ -20,8 +20,8 @@ public class UserServiceClient {
         return restTemplate.getForObject(url, Buyer.class);
     }
 
-//    public Product getProductById(Long id) {
-//        String url = USER_SERVICE_URL + "/products/" + id;
-//        return restTemplate.getForObject(url, Product.class);
-//    }
+    public Product getProductById(Long id) {
+        String url = USER_SERVICE_URL + "/product/" + id;
+        return restTemplate.getForObject(url, Product.class);
+    }
 }
