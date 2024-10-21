@@ -27,7 +27,7 @@ public class OrderController {
     public ResponseEntity<Orders> placeOrder(@RequestBody OrdersDTO ordersDTO) {
     	
     	logger.info("Creating order with DTO: {}", ordersDTO);
-        Orders savedOrder = orderService.createOrder(ordersDTO); // Logic to save the order
+        Orders savedOrder = orderService.createOrder(ordersDTO); 
         
         logger.info("Order created successfully: {}", savedOrder);
         return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
@@ -36,7 +36,7 @@ public class OrderController {
     @GetMapping("/viewOrders/{buyerId}")
     public ResponseEntity<List<OrdersDTO>> viewOrdersByBuyer(@PathVariable Long buyerId){
     	List<OrdersDTO> orders = orderService.getOrdersByBuyerId(buyerId);
-    	
+    	logger.info("order body : {}" + orders);
     	if(orders.isEmpty()) {
     		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     	}
@@ -44,4 +44,14 @@ public class OrderController {
     	return new ResponseEntity<>(orders, HttpStatus.OK);
     }
        
+    @GetMapping("/orders/{sellerId}")
+    public ResponseEntity<List<OrdersDTO>> viewOrdersBySeller(@PathVariable Long sellerId) {
+        List<OrdersDTO> orders = orderService.getOrdersBySellerId(sellerId); 
+        logger.info("order body : {}" + orders);
+        if (orders.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
 }
