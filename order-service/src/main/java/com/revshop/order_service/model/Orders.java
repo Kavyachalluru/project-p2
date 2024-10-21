@@ -19,6 +19,9 @@ public class Orders {
 	    @Column(name = "buyer_id")
 	    private Long buyerId;
 	    
+	    @Column(name = "seller_id") 
+	    private Long sellerId;
+	    
 	    private double totalPrice;
 
 	    private String shippingAddress;
@@ -45,6 +48,14 @@ public class Orders {
 			this.buyerId = buyerId;
 		}
 
+		
+		public Long getSellerId() {
+			return sellerId;
+		}
+
+		public void setSellerId(Long sellerId) {
+			this.sellerId = sellerId;
+		}
 
 		public double getTotalPrice() {
 			return totalPrice;
@@ -78,6 +89,14 @@ public class Orders {
 		public void setOrderItems(List<OrderItems> orderItems) {
 			this.orderItems = orderItems;
 		}
+
+		@Override
+		public String toString() {
+			return "Orders [id=" + id + ", buyerId=" + buyerId + ", sellerId=" + sellerId + ", totalPrice=" + totalPrice
+					+ ", shippingAddress=" + shippingAddress + ", paymentMethod=" + paymentMethod + ", orderItems="
+					+ orderItems + "]";
+		}
 	    
+		
 
 }

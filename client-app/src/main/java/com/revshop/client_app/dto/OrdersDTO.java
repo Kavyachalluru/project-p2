@@ -7,7 +7,8 @@ public class OrdersDTO {
 	private Long id;
  
     private Long buyerId;
-    
+    private Long buyerName;
+    private Long sellerId;
     private double totalPrice;
 
     private String shippingAddress;
@@ -30,6 +31,22 @@ public class OrdersDTO {
 
 	public void setBuyerId(Long buyerId) {
 		this.buyerId = buyerId;
+	}
+	
+	public Long getBuyerName() {
+		return buyerName;
+	}
+
+	public void setBuyerName(Long buyerName) {
+		this.buyerName = buyerName;
+	}
+
+	public Long getSellerId() {
+		return sellerId;
+	}
+
+	public void setSellerId(Long sellerId) {
+		this.sellerId = sellerId;
 	}
 
 	public double getTotalPrice() {

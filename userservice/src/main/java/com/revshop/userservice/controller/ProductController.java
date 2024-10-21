@@ -124,14 +124,18 @@ public class ProductController {
     @GetMapping("/product/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
         Product product = productService.getProductById(id);
+        System.out.println("PRODUCT:::"+product.getSeller());
+
         if (product != null) {
             return ResponseEntity.ok(product);
         }
+        
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProductsByCategoryForBuyer(@RequestParam("category") String category) {
+    	System.out.println("search controller...!");
         List<Product> products;
 
         if (category == null || category.isEmpty()) {
