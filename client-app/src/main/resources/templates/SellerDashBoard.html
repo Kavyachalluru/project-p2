@@ -8,7 +8,41 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        var stompClient = null;
 
+
+        function connect() {
+            var socket = new SockJS('/ws'); // Connect to the WebSocket endpoint
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+                
+                console.log('Connected: ' + frame);
+                stompClient.subscribe('/topic/notifications', function (notification) {
+                    showNotification(notification.body);
+                });
+            });
+        }
+
+        function showNotification(message) {
+            var notifications = document.getElementById('notifications');
+            var notification = document.getElementById('notification');
+		    notification.style.display = 'inline';
+		    notifications.innerHTML="";
+            notifications.innerHTML += "<span>" + message + "</span>"; // Display notifications
+        }
+        
+        function closeNotification() {
+		    var notification = document.getElementById('notification');
+		    notification.style.display = 'none';
+		}
+		
+		
+
+        window.onload = connect; // Connect on page load
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -124,6 +158,41 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        .notification {
+			z-index: 1;
+		    position: fixed;
+		    top: 80px;
+		    right: 20px;
+		    background-color: #4CAF50; /* Green background */
+		    color: white; /* White text */
+		    padding: 15px;
+		    border-radius: 5px;
+		    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+		    display: flex;
+		    justify-content: space-between;
+		    align-items: center;
+		    z-index: 1000;
+		    animation: slide-in 0.5s forwards;
+		}
+		.close-btn {
+			float:right;
+		    background: none;
+		    border: none;
+		    color: white;
+		    font-size: 20px;
+		    cursor: pointer;
+		}
+		
+		@keyframes slide-in {
+		    from {
+		        transform: translateY(-20px);
+		        opacity: 0;
+		    }
+		    to {
+		        transform: translateY(0);
+		        opacity: 1;
+		    }
+		}
     </style>
 </head>
 <body>
@@ -145,6 +214,13 @@
             </ul>
         </div>
     </nav>
+    <div id="notification" class="notification">
+        <button class="close-btn" onclick="closeNotification()">×</button>
+		<span id="notifications" class="message"></span>
+		
+        
+    </div>
+    
 
     <!-- Content Section -->
     <div class="container">
