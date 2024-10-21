@@ -218,7 +218,7 @@
 				
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/displayProducts">Shop</a></li>
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/orderitems">Your Orders</a></li>
-				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/favorite">Wishlist</a></li>
+				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/favourites/buyer">Wishlist</a></li>
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/home">LogOut</a></li>
 				<li class="nav-item mx-5">
     <a class="nav-link" href="/revshop/update">
@@ -301,8 +301,9 @@
 						<div class="card product-card">
 							<img th:src="@{${product.image_url}}" class="card-img-top" th:alt="${product.name}">
 							<input type="hidden" name="productId" th:value="${product.id}" />
-							<form th:action="@{/revshop/favorites/add}" th:method="post">
+							<form th:action="@{/revshop/favourites/add}" th:method="post">
 								<input type="hidden" th:name="productId" th:value="${product.id}">
+								<input type="hidden" th:name="buyerId" th:value="${buyerId}" />
 								<button class="favorite-btn" onclick="toggleFavorite(this)"
 									style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; cursor: pointer; font-size: 24px; color: #ff0000;">
 									<span class="heart">&#10084;&#65039;</span>
