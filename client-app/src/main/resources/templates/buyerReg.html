@@ -31,16 +31,17 @@
             height: 100%;
             z-index: -1;
             border: none;
-            background: url('https://lightcastlepartners.com/wp-content/uploads/2023/05/e-commerce-worth-celebrating.webp') no-repeat center center;
+            background: url('https://c0.wallpaperflare.com/preview/807/1021/167/chart-graph-business-finance.jpg') no-repeat center center;
             background-size: cover;
         }
         .wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(39, 39, 39, 0.7);
-            width: 600px;
-            padding: 40px;
+            background: rgba(39, 39, 39, 0);
+            width: 650px;
+            margin-left: 600px;
+            padding: 100px;
             border-radius: 10px;
             z-index: 1;
         }
@@ -48,19 +49,20 @@
             width: 100%;
         }
         header {
-            color: #fff;
+            color: #000000;
             font-size: 30px;
             text-align: center;
             padding-bottom: 20px;
+            font-weight: bold;
         }
         .input-box {
             position: relative;
             margin-bottom: 20px;
         }
         .input-field {
-            font-size: 15px;
+            font-size: 16px;
             background: rgba(255, 255, 255, 0.2);
-            color: #fff;
+            color: #000000;
             height: 50px;
             width: 100%;
             padding-left: 45px;
@@ -73,23 +75,23 @@
             background: rgba(255, 255, 255, 0.25);
         }
         ::-webkit-input-placeholder {
-            color: #fff;
+            color: #000000;
         }
         .input-box i {
             position: absolute;
             top: 12px;
             left: 17px;
-            color: #fff;
+            color: #00000094;
         }
         .submit {
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 500;
-            color: black;
+            color: rgb(67, 67, 125);
             height: 45px;
             width: 100%;
             border: none;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.259);
             cursor: pointer;
             transition: .3s ease-in-out;
         }
@@ -98,26 +100,27 @@
             box-shadow: 1px 5px 7px 1px rgba(0, 0, 0, 0.2);
         }
         .top span {
-            color: #fff;
-            font-size: small;
+            color: #000000;
+            font-size: 16px;
             display: block;
             text-align: center;
+            padding-bottom: 15px;
         }
         .top span a {
             font-weight: 500;
-            color: #fff;
+            color: #6200ff;
             margin-left: 5px;
             text-decoration: underline;
         }
         .form-check {
-            color: #fff;
+            color: #000000;
             margin-bottom: 20px;
         }
         .form-check input {
             margin-right: 10px;
         }
         .form-check a {
-            color: chocolate;
+            color: rgb(0, 60, 255);
         }
         .text-danger {
             color: red;
@@ -136,9 +139,7 @@
     <div class="wrapper">
         <div class="form-box">
             <header>Buyer Registration</header>
-            <div class="top">
-                <span>Already have an account? <a th:href="@{/revshop/login}">Login</a></span>
-            </div>
+            
             <form th:action="@{/revshop/buyerRegister}" th:object="${buyer}" method="post">
                 <!-- First Name -->
                 <div class="input-box">
@@ -179,6 +180,9 @@
                 <div class="input-box">
                     <input type="submit" class="submit" value="Register">
                 </div>
+                <div class="top">
+                <span>Already have an account? <a th:href="@{/revshop/login}">Login</a></span>
+            </div>
             </form>
         </div>
     </div>

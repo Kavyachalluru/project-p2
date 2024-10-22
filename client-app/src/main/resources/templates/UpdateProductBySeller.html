@@ -29,6 +29,57 @@
         .gender-section, .size-section, .color-section {
             display: none; /* Initially hidden */
         }
+         /* Navbar Styles */
+        .nav-link {
+            position: relative;
+            display: inline-block;
+            text-decoration: none;
+            color: blue;
+            font-weight: normal;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2.5px;
+            display: block;
+            margin-top: 5px;
+            right: 0;
+            background: #ff0000;
+            transition: width 0.3s ease;
+            -webkit-transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 45%;
+            left: 0;
+            right: auto;
+        }
+        .nav-link.active::after {
+            width: 100%;
+            left: 0;
+            right: auto;
+        }
+        .nav-link.active {
+            color: #561ad7;
+            font-weight: bold;
+        }
+        .nav-link {
+            color: rgb(0, 0, 0) !important;
+            font-size: 17px;
+            font-weight: bold;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        .navbar {
+            padding-top: 0.3rem;
+            padding-bottom: 0.3rem;
+            background-color: #a39595;
+        }
+
+        /* Adjust the logo size */
+        .navbar-brand img {
+            width: 160px;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -115,6 +166,25 @@
     </script>
 </head>
 <body>
+
+<!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <a class="navbar-brand" href="/revshop/home">
+            <img src="https://i.postimg.cc/T2nXh20S/REVSHOP-main2.png" alt="RevShop Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item mx-5"><a class="nav-link" th:href="@{/revshop/show}">Home</a></li>
+                
+                <li class="nav-item mx-5"><a class="nav-link" th:href="@{/revshop/product}">Add Product</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" th:href="@{/revshop/orders}">Orders</a></li>
+                <li class="nav-item mx-5"><a class="nav-link" th:href="@{/revshop/home}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
 
 <!-- Update Product Form -->
 <div class="container">
