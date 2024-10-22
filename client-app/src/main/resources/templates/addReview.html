@@ -2,18 +2,43 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Add a Review</title>
+    <title>REVSHOP | Review</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+    
+    	body {
+            background-image: url('https://img.freepik.com/premium-vector/golden-stars_676239-1016.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh; 
+        }
+    
         .container {
             margin-top: 50px;
+            margin-right: 10px;
         }
 
         /* Consistent button styling */
-        .btn-success, .btn-danger {
+        .btn-success  {
+            padding: 5px 10px;
+            font-size: 14px;
+            margin-left: 30%;
+        }
+		
+		.btn-danger {
             padding: 5px 10px;
             font-size: 14px;
         }
+		
+		.form-group{
+			width: 60%;
+		}
+		
+		.custom-card {
+		    width: 60%;
+		}
+		
 
         .review-section {
             margin-top: 40px;
@@ -22,6 +47,7 @@
         .star-rating {
             direction: rtl;
             display: inline-block;
+            margin-left:20px;
         }
 
         .star-rating input[type="radio"] {
@@ -39,6 +65,21 @@
         .star-rating label:hover ~ label {
             color: #ffc700;
         }
+	
+		.text-center{
+			margin-top:30px;
+		}
+		
+		.custom-card {
+		    position: relative; /* Ensure the card is the reference for absolute positioning */
+		}
+		
+		.custom-card .btn-danger {
+		    position: absolute;
+		    top: 50px;
+		    right: 60px;
+		}
+		
 
         .navbar {
             padding-top: 0.5rem;
@@ -100,8 +141,9 @@
     </nav>
 
     <!-- Add a Review Section -->
+    <h2 class="text-center">Add Your Review</h2>
     <div class="container mt-5">
-        <h2 class="text-center">Add Your Review</h2>
+        
 
         <!-- Review Form -->
         <form th:action="@{/revshop/reviews/add}" method="post" th:onsubmit="return window.location.reload()">
@@ -134,7 +176,7 @@
                 <p>No reviews available for this product yet.</p>
             </div>
             <div th:each="review : ${reviews}">
-                <div class="card mb-3">
+                <div class="card mb-3 custom-card ">
                     <div class="card-body">
                         <p><strong>Rating:</strong> <span th:text="${review.rating}"></span></p>
                         <p><strong>Comment:</strong> <span th:text="${review.comment}"></span></p>
