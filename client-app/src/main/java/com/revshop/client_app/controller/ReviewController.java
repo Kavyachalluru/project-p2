@@ -17,7 +17,7 @@ public class ReviewController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private static final String REVIEW_SERVICE_URL = "http://localhost:8083/reviews";
+    private static final String REVIEW_SERVICE_URL = "http://localhost:8084/reviews";
 
     // Show the review form
     @GetMapping("/addForm")

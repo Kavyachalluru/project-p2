@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Define the log pattern for the console logs -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- File appender for storing logs in a file -->
+    <appender name="File" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/buyer-service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/buyer-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory> <!-- Keep logs for 30 days -->
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- JSON format appender for structured logging (optional) -->
+    <appender name="JsonFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/buyer-service.json</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/buyer-service.%d{yyyy-MM-dd}.json</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder" />
+    </appender>
+    <!-- Root logger configuration -->
+    <root level="INFO">
+        <appender-ref ref="Console" />
+        <appender-ref ref="File" />
+        <!-- Uncomment the next line if you want to log in JSON format as well -->
+        <!-- <appender-ref ref="JsonFile" /> -->
+    </root>
+
+    <!-- Package-specific logging levels -->
+    <logger name="com.revshop.p1.service" level="DEBUG" />
+    <logger name="com.revshop.p1.repository" level="WARN" />
+
+    <!-- Add logging for EmailService -->
+    <logger name="com.revshop.userservice.service.EmailService" level="DEBUG" />
+    <logger name="com.revshop.userservice.service" level="INFO" /> <!-- General logging for the service package -->
+    <logger name="com.revshop.userservice.service.LoginService" level="DEBUG" /> <!-- New logger for LoginService -->
+    <logger name="com.revshop.userservice.repository" level="WARN" />
+    <logger name="com.revshop.userservice.service.SellerService" level="DEBUG" /> <!-- New logger for SellerService -->
+
+</configuration>

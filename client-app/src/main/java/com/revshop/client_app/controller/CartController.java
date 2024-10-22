@@ -35,6 +35,7 @@ public class CartController {
     @Autowired
     CartRepository cartRepository;
 
+
     private static final String USER_SERVICE_URL = "http://localhost:8081/revshop"; 
     private static final String CART_SERVICE_URL = "http://localhost:8082/revshop"; 
 

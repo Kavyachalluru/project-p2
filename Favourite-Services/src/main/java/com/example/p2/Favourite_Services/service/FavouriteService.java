@@ -41,6 +41,9 @@ package com.example.p2.Favourite_Services.service;
 
 import com.example.p2.Favourite_Services.entity.Favourite;
 import com.example.p2.Favourite_Services.repository.FavouriteRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,30 +52,47 @@ import java.util.Optional;
 
 @Service
 public class FavouriteService{
+	
+	private static final Logger logger = LoggerFactory.getLogger(FavouriteService.class);
 
     @Autowired
     private FavouriteRepository favouriteRepository;
 
     // Get favorites by buyerId
     public List<Favourite> getFavouritesByBuyer(Long buyerId) {
-        return favouriteRepository.findByBuyerId(buyerId);
+    	logger.info("Fetching favourites for buyerId: {}", buyerId);
+       // return favouriteRepository.findByBuyerId(buyerId);
+    	 List<Favourite> favourites = favouriteRepository.findByBuyerId(buyerId);
+         logger.debug("Number of favourites found for buyerId {}: {}", buyerId, favourites.size());
+         return favourites;
     }
 
     // Add a new favorite
     public void addFavourite(Long buyerId, Long productId) {
+    	 logger.info("Adding favourite - BuyerId: {}, ProductId: {}", buyerId, productId);
         // Simulate adding favorite without external service call
         Favourite favourite = new Favourite(buyerId, productId);
         favouriteRepository.save(favourite);
+        logger.debug("Favourite saved for BuyerId: {} with ProductId: {}", buyerId, productId);
     }
 
     // Remove a favorite by its ID
     public void removeFavourite(Long favouriteId) {
+    	 logger.info("Removing favourite with ID: {}", favouriteId);
         favouriteRepository.deleteById(favouriteId);
+        logger.debug("Favourite removed with ID: {}", favouriteId);
     }
     
  // New method to get a favourite by ID
     public Optional<Favourite> getFavouriteById(Long favouriteId) {
-        return favouriteRepository.findById(favouriteId);
+    	logger.info("Fetching favourite with ID: {}", favouriteId);
+    	Optional<Favourite> favourite = favouriteRepository.findById(favouriteId);
+        if (favourite.isPresent()) {
+            logger.debug("Favourite found with ID: {}", favouriteId);
+        } else {
+            logger.warn("Favourite not found with ID: {}", favouriteId);
+        }
+        return favourite;
     }
 }
 
