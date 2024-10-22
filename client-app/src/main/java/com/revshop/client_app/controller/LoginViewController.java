@@ -23,7 +23,7 @@ public class LoginViewController {
     private RestTemplate restTemplate;
 
     // URL of the user service for validation
-    private static final String BASE_URL = "http://localhost:8081/revshop"; // Adjust the URL as needed
+    private static final String BASE_URL = "http://localhost:8081/revshop"; 
 
     @GetMapping("/login")
     public String showLoginPage(Model model) {
@@ -48,7 +48,7 @@ public class LoginViewController {
             if (seller.getBusinessName() != null) {
                 session.setAttribute("loggedInUser", seller.getId());
                 session.setAttribute("userType", "seller");
-                return "redirect:/revshop/show"; 
+                return "redirect:http://localhost:9089/revshop/show"; 
             }
 
             Buyer buyer = restTemplate.postForObject(loginUrl, b1, Buyer.class);
@@ -57,7 +57,8 @@ public class LoginViewController {
             if (buyer != null) {
                 session.setAttribute("loggedInUser", buyer.getBuyer_id());
                 session.setAttribute("userType", "buyer");
-                return "redirect:/revshop/displayProducts"; 
+//                return "redirect:/revshop/displayProducts"; 
+                  return "redirect:http://localhost:9089/revshop/displayProducts";
             }
 
         } catch (Exception e) {
@@ -74,6 +75,6 @@ public class LoginViewController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/revshop/login"; 
+        return "redirect:http://localhost:9089/revshop/login"; 
     }
 }

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RevShop - Favorites">
-    <title>RevShop - Favorites</title>
+    <title>REVSHOP | Favorites</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -218,6 +218,12 @@
                 <li class="nav-item mx-5"><a class="nav-link" href="/revshop/displayProducts">Shop</a></li>
                 <li class="nav-item mx-5"><a class="nav-link" href="/revshop/orderitems">Your Orders</a></li>
               <li class="nav-item mx-5"><a class="nav-link" th:href="@{'/revshop/favourites/buyer?buyerId=' + ${session.loggedInUser}}">Favorite</a></li>
+              <li class="nav-item mx-5"><a class="nav-link" href="/revshop/cart"><svg
+							xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
+							class="bi bi-bag" viewBox="0 0 16 16">
+							<path
+								d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
+						</svg></a></li>
                 <li class="nav-item mx-5"><a class="nav-link" href="/revshop/home">LogOut</a></li>
             </ul>
         </div>
@@ -238,8 +244,8 @@
                         <!-- Product Name -->
                         <h5 class="card-title text-center" th:text="${favourite.product.name}"></h5>
                         <!-- Product Price -->
-                        <p class="text-center product-price">
-                            <span th:text="${favourite.product.discountPrice}"></span> $
+                        <p class="text-center product-price">₹
+                            <span th:text="${favourite.product.discountPrice}"></span> 
                             <span class="original-price" th:text="${favourite.product.price	}"></span>
                         </p>
                         <!-- View Details and Remove Buttons -->
