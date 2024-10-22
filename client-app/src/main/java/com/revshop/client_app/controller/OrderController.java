@@ -91,7 +91,7 @@ public class OrderController {
         Long buyerId = (Long) session.getAttribute("loggedInUser");
         if (buyerId == null) {
             model.addAttribute("message", "You need to log in to place an order.");
-            return "redirect:/revshop/login";
+            return "redirect:http://localhost:9089/revshop/login";
         }
 
         // Use RestTemplate to get the product details
@@ -100,7 +100,7 @@ public class OrderController {
 
         if (productResponse.getStatusCode() != HttpStatus.OK) {
             model.addAttribute("message", "Product not found. Please try again.");
-            return "redirect:/revshop/products";
+            return "redirect:http://localhost:9089/revshop/products";
         }
 
         Product product = productResponse.getBody();
@@ -125,14 +125,14 @@ public class OrderController {
         orderDto.setOrderItems(orderItems);
 
         // Call the OrderService API
-        String orderServiceUrl = "http://localhost:9090/revshop/place"; // Adjust URL as necessary
+        String orderServiceUrl = "http://localhost:9090/revshop/place"; 
         ResponseEntity<Orders> response = restTemplate.postForEntity(orderServiceUrl, orderDto, Orders.class);
 
         if (response.getStatusCode() == HttpStatus.CREATED) {
         	 messagingTemplate.convertAndSend("/topic/notifications", 
         	             product.getName() + " has been purchased!");
             model.addAttribute("message", "Order placed successfully!");
-            return "redirect:/revshop/displayProducts";
+            return "redirect:http://localhost:9089/revshop/displayProducts";
         } else {
             model.addAttribute("message", "Failed to place order. Please try again.");
             return "orders2";
@@ -145,7 +145,7 @@ public class OrderController {
     	
         if (buyerId == null) {
             model.addAttribute("message", "You need to log in to place an order.");
-            return "redirect:/revshop/login";
+            return "redirect:http://localhost:9089/revshop/login";
         }
         
     	String orderServiceUrl = ORDER_SERVICE_URL + "/viewOrders/" + buyerId;
@@ -179,14 +179,14 @@ public class OrderController {
         // Ensure the buyer is logged in
         if (buyerId == null) {
             model.addAttribute("message", "You need to log in to update the order.");
-            return "redirect:/revshop/login";
+            return "redirect:http://localhost:9089/revshop/login";
         }
         orderDTO.setId(orderId);
         // Call OrderService to update the order
         String updateUrl = ORDER_SERVICE_URL + "/updateOrder/" + orderId;
         restTemplate.put(updateUrl, orderDTO);
 
-        return "redirect:/revshop/orderitems"; // Redirect to the order items page
+        return "redirect:http://localhost:9089/revshop/orderitems"; // Redirect to the order items page
     }
     	
 //    @GetMapping("/orders")
@@ -211,7 +211,7 @@ public class OrderController {
         
         if (sellerId == null) {
             model.addAttribute("message", "You need to log in to view orders.");
-            return "redirect:/revshop/login";
+            return "redirect:http://localhost:9089/revshop/login";
         }
 
         OrdersDTO[] response = restTemplate.getForObject(ORDER_SERVICE_URL + "/orders/" + sellerId, OrdersDTO[].class);

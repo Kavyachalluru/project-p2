@@ -35,8 +35,8 @@ public class CartController {
     @Autowired
     CartRepository cartRepository;
 
-    private static final String USER_SERVICE_URL = "http://localhost:8081/revshop"; // Replace with actual URL of user service
-    private static final String CART_SERVICE_URL = "http://localhost:8082/revshop"; // Replace with actual URL of product service
+    private static final String USER_SERVICE_URL = "http://localhost:8081/revshop"; 
+    private static final String CART_SERVICE_URL = "http://localhost:8082/revshop"; 
 
 
     @GetMapping("/cart")
@@ -78,7 +78,7 @@ public class CartController {
         restTemplate.postForEntity(CART_SERVICE_URL + "/cart/add?buyerId="+buyerId+"&productId=" + productId, request, Cart.class);
         System.out.println("posting to cart");
         model.addAttribute("product", product);
-        return "redirect:/revshop/cart";
+        return "redirect:http://localhost:9089/revshop/cart";
     }
 
     @PostMapping("/cart/update")
@@ -86,13 +86,13 @@ public class CartController {
         // Call the Cart Service to update the cart item
         HttpEntity<Cart> request = new HttpEntity<>(cart);
         restTemplate.exchange(CART_SERVICE_URL + "/update", HttpMethod.PUT, request, Cart.class);
-        return "redirect:/revshop/cart?buyerId=" + cart.getBuyer_id();
+        return "redirect:http://localhost:9089/revshop/cart?buyerId=" + cart.getBuyer_id();
     }
     @PostMapping("/cart/remove")
     public String removeFromCart(@RequestParam Long cartId, HttpSession session) {
     	Long buyerId=(Long)session.getAttribute("loggedInUser");
         restTemplate.delete(CART_SERVICE_URL + "/cart/remove/" + cartId);
-        return "redirect:/revshop/cart";
+        return "redirect:http://localhost:9089/revshop/cart";
     }
     @GetMapping("/checkout")
     public String showCart(Model model,@RequestParam("totalPrice") double totalPrice, HttpSession session) {

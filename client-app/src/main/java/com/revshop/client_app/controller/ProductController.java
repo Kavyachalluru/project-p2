@@ -36,7 +36,7 @@ public class ProductController {
     public String showProductForm(Model model,HttpSession session ) {
     	Long sellerId = (Long) session.getAttribute("loggedInUser");
         if (sellerId == null) {
-            return "redirect:/revshop/login"; // Redirect if not logged in
+            return "redirect:http://localhost:9089/revshop/login"; // Redirect if not logged in
         }
 
         model.addAttribute("seller", sellerId);
@@ -48,7 +48,7 @@ public class ProductController {
     public String addProduct(@ModelAttribute Product product, HttpServletRequest request, HttpSession session) {
         Long sellerId = (Long) session.getAttribute("loggedInUser");
         if (sellerId == null) {
-            return "redirect:/revshop/login";
+            return "redirect:http://localhost:9089/revshop/login";
         }
 
         String productServiceUrl = UriComponentsBuilder.fromHttpUrl(PRODUCT_SERVICE_URL)
@@ -64,7 +64,7 @@ public class ProductController {
             return "error"; 
         }
 
-        return "redirect:/revshop/show";
+        return "redirect:http://localhost:9089/revshop/show";
     }
 
 
@@ -73,7 +73,7 @@ public class ProductController {
         Long sellerId = (Long) session.getAttribute("loggedInUser");
 
         if (sellerId == null) {
-            return "redirect:/revshop/login";
+            return "redirect:http://localhost:9089/revshop/login";
         }
 
         try {
@@ -95,7 +95,7 @@ public class ProductController {
     public String showUpdateForm(@RequestParam("productId") Long id, Model model, HttpSession session) {
     	 Long sellerId = (Long) session.getAttribute("loggedInUser");
         if (sellerId == null) {
-            return "redirect:/login"; // Redirect to login if not logged in
+            return "redirect:http://localhost:9089/login"; // Redirect to login if not logged in
         }
         
         Product product = restTemplate.getForObject(PRODUCT_SERVICE_URL + "/product/{productId}", Product.class, id);
@@ -116,13 +116,13 @@ public class ProductController {
         	System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
             try {
                 restTemplate.postForObject(PRODUCT_SERVICE_URL + "/product/update?sellerId=" + sellerId + "&productId=" + productId, product, Product.class);
-                return "redirect:/revshop/show"; 
+                return "redirect:http://localhost:9089/revshop/show"; 
             } catch (Exception e) {
                 e.printStackTrace(); 
                 return "error/500"; 
             }
         }
-        return "redirect:/revshop/login"; 
+        return "redirect:http://localhost:9089/revshop/login"; 
     }
 
     @GetMapping("/product/delete/{id}")
@@ -132,7 +132,7 @@ public class ProductController {
     	restTemplate.getForObject(PRODUCT_SERVICE_URL + "/product/delete/" + id + "?sellerId=" + sellerId, Void.class);
 
         
-        return "redirect:/revshop/show";
+        return "redirect:http://localhost:9089/revshop/show";
     }
 
     @GetMapping("/displayProducts")

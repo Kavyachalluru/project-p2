@@ -34,7 +34,7 @@ public class FavouriteController {
 
         Long buyerId = (Long) session.getAttribute("loggedInUser"); // Retrieves buyerId from session
         if (buyerId == null) {
-            return "redirect:/revshop/login"; // Redirect to login if not logged in
+            return "redirect:http://localhost:9089/revshop/login"; // Redirect to login if not logged in
         }
         Favourite[] response = {};
         try {
@@ -71,7 +71,7 @@ public class FavouriteController {
     public String addFavourite( @RequestParam Long productId ,HttpSession session, Model model) {
         Long buyerId = (Long) session.getAttribute("loggedInUser"); // Retrieve buyerId from session
         if (buyerId == null) {
-            return "redirect:/revshop/login"; // Redirect if not logged in
+            return "redirect:http://localhost:9089/revshop/login"; // Redirect if not logged in
         }
 //        Long productId =(Long)  model.;
         System.out.println("PRODUCT:::" + productId);
@@ -95,7 +95,7 @@ public class FavouriteController {
 
             if (isAlreadyFavourite) {
                 model.addAttribute("error", "Product is already in your favourites.");
-                return "redirect:/revshop/displayProducts"; // Redirect after duplicate check
+                return "redirect:http://localhost:9089/revshop/displayProducts"; // Redirect after duplicate check
             }
         }
 
@@ -116,7 +116,7 @@ public class FavouriteController {
             model.addAttribute("error", "An error occurred while adding favourite: " + e.getMessage());
         }
 
-        return "redirect:/revshop/displayProducts"; // Redirect after adding favourite
+        return "redirect:http://localhost:9089/revshop/displayProducts"; // Redirect after adding favourite
     }
 
 
@@ -125,7 +125,7 @@ public class FavouriteController {
     public String removeFavourite(@PathVariable Long favouriteId, HttpSession session, Model model) {
         Long buyerId = (Long) session.getAttribute("loggedInUser"); // Retrieve buyerId from session
         if (buyerId == null) {
-            return "redirect:/revshop/login"; // Redirect if not logged in
+            return "redirect:http://localhost:9089/revshop/login"; // Redirect if not logged in
         }
 
         try {
@@ -144,6 +144,6 @@ public class FavouriteController {
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred while removing favourite: " + e.getMessage());
         } 
-        return "redirect:/revshop/favourites/buyer";
+        return "redirect:http://localhost:9089/revshop/favourites/buyer";
     }
 }

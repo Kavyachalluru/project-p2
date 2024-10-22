@@ -21,7 +21,7 @@ public class SellerViewController {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	private static final String SELLER_SERVICE_URL = "http://localhost:8081/revshop/seller/register"; // Adjust as necessary
+	private static final String SELLER_SERVICE_URL = "http://localhost:8081/revshop/seller/register"; 
 
 	@GetMapping("/register")
 	public String showForm(Model model) {
@@ -34,7 +34,7 @@ public class SellerViewController {
 		ResponseEntity<String> response = restTemplate.postForEntity(SELLER_SERVICE_URL, seller, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return "redirect:/revshop/login";
+			return "redirect:http://localhost:9089/revshop/login";
 		} else {
 			model.addAttribute("message", "Registration failed. Please try again.");
 			return "SellersReg"; 
