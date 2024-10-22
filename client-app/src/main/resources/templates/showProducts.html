@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="RevShop - Browse Products">
-	<title>RevShop - Products</title>
+	<title>REVSHOP | Products</title>
 	<!-- Bootstrap CSS -->
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -13,7 +13,7 @@
 	<style>
 		/* Custom CSS */
 		.product-card img {
-			height: 250px;
+			height: auto;
 			object-fit: cover;
 		}
 
@@ -26,6 +26,10 @@
 			padding: 20px;
 			border-radius: 5px;
 			margin-bottom: 20px;
+		}
+		
+		.filter-left{
+			margin-left:0;
 		}
 
 		.product-price {
@@ -201,6 +205,28 @@
 			/* Smooth transition for color change */
 
 		}
+		
+		.container {
+	width:100vw;
+	max-width: 95%; 
+    padding-left: 0;  
+    padding-right: 0; 
+    margin-right: 0;
+}
+
+		.list-group{
+			text-align: center;
+		}
+		
+		.button-container{
+			margin-top:20px;
+			margin-left:80px;
+		}
+		
+		.form-control{
+			margin-left:20px;
+		}
+		
 	</style>
 </head>
 
@@ -219,43 +245,41 @@
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/displayProducts">Shop</a></li>
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/orderitems">Your Orders</a></li>
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/favourites/buyer">Wishlist</a></li>
-				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/home">LogOut</a></li>
-				<li class="nav-item mx-5">
-    <a class="nav-link" href="/revshop/buyer/update">
-        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/profile-1829212-1551474.png?f=webp&w=512" alt="Profile" style="width: 22px; height: 22px;">
-    </a>
-</li>
+
 				<li class="nav-item mx-5"><a class="nav-link" href="/revshop/cart"><svg
 							xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor"
 							class="bi bi-bag" viewBox="0 0 16 16">
 							<path
 								d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z" />
 						</svg></a></li>
+						<li class="nav-item mx-5"><a class="nav-link" href="/revshop/home">LogOut</a></li>
 			</ul>
 
 		</div>
 	</nav>
 
 	<!-- Filters Section -->
-	<section class="container mt-5">
+	<section class="container mt-5 filter-left">
 		<div class="row">
 			<div class="col-md-3">
 				<div class="filter-section">
-					<h5 class="filter-title">Filter by Category</h5>
+					<h5 class="filter-title"><center>Filter by Category</center></h5>
 					<ul class="list-group">
+					<li class="list-group-item"><a href="/revshop/displayProducts">All Products</a></li>
 						<li class="list-group-item"><a href="/revshop/search?category=Electronics">Electronics</a></li>
 						<li class="list-group-item"><a href="/revshop/search?category=Fashion">Fashion</a></li>
 						<li class="list-group-item"><a href="/revshop/search?category=Home & Kitchen">Home & Kitchen</a>
 						</li>
+
 						<li class="list-group-item"><a href="/revshop/search?category=Sports">Sports</a></li>
-						<li class="list-group-item"><a href="/revshop/search?category=Clothing">Clothing</a></li>
+						<!-- <li class="list-group-item"><a href="/revshop/search?category=Clothing">Clothing</a></li> -->
 						<li class="list-group-item"><a href="/revshop/search?category=Books">Books</a></li>
-						<li class="list-group-item"><a href="/revshop/displayProducts">All Products</a></li>
+						
 					</ul>
 
 				</div>
 				<div class="filter-section">
-					<h5 class="filter-title">Filter by Price</h5>
+					<h5 class="filter-title"><center>Filter by Price</center></h5>
 					<form class="form-inline" action="/revshop/filterByDiscountPrice" method="GET"
 						style="margin: 20px;">
 						<div class="form-row align-items-center">
@@ -269,7 +293,7 @@
 									Price:</label> <input type="number" class="form-control" id="maxdiscountPrice"
 									name="maxdiscountPrice" placeholder="Max Price" required>
 							</div>
-							<div class="col-auto">
+							<div class="col-auto button-container">
 								<button type="submit" class="btn btn-primary">Filter</button>
 							</div>
 						</div>
@@ -282,8 +306,9 @@
 
 			<div class="col-md-9">
 				<!-- Search Bar -->
-				<form class="form-inline my-2 my-lg-0 ml-3" action="/revshop/searchByNameOrBrand" method="GET">
-					<div class="input-group" style="max-width: 400px; margin-left: 550px;">
+				<div class="search-bar mb-4">
+				<form class="form-inline my-2 my-lg-0 justify-content-center" action="/revshop/searchByNameOrBrand" method="GET">
+					<div class="input-group" style="width: 450vh; ">
 						<input class="form-control" type="search" name="query" placeholder="Search for products"
 							aria-label="Search">
 						<div class="input-group-append">
@@ -292,12 +317,13 @@
 							</button>
 						</div>
 					</div>
+					</div>
 				</form>
 
 				<h2 class="text-center mb-4">All Products</h2>
 				<div class="row">
 					<!-- Product Card -->
-					<div class="col-md-4" th:each="product : ${products}">
+					<div class="col-md-4 d-flex" th:each="product : ${products}">
 						<div class="card product-card">
 							<img th:src="@{${product.image_url}}" class="card-img-top" th:alt="${product.name}">
 							<input type="hidden" name="productId" th:value="${product.id}" />
@@ -316,18 +342,17 @@
 								<p class="product-price">
 									<span class="original-price" th:text="'₹' + ${product.price}"></span>
 									<span class="product-discount" th:text="'₹' + ${product.discountPrice}"></span>
-									<span class="badge badge-danger ml-2">DEAL</span>
+									<span class="badge badge-danger ml-2">🏷️DEAL</span>
 								</p>
 
 								<p class="card-text" th:text="${product.description}"></p>
-								<form th:action="@{/revshop/cart/add}" method="post" style="display: inline;">
+								<form th:action="@{/revshop/cart/add}" method="post" style="display: inline-block; margin-left:15px;">
 									<input type="hidden" name="productId" th:value="${product.id}" />
 									<input type="hidden" id="quantity" name="quantity" value="1" min="1" required
 										style="width: 60px;">
-									<button type="submit" class="btn btn-outline-secondary">Add
-										to Cart</button>
+									<button type="submit" class="btn btn-outline-secondary">Add to Cart</button>
 								</form>
-								<form th:action="@{/revshop/orderform}" th:method="get">
+								<form th:action="@{/revshop/orderform}" th:method="get" style="display: inline-block; margin-left: 50px;">
 									<input type="hidden" name="productId" th:value="${product.id}" />
 									<input type="hidden" name="price" th:value="${product.discountPrice}" />
 									<input type="hidden" name="productImage" th:value="${product.image_url}" />
