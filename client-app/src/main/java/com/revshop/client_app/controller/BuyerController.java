@@ -78,8 +78,6 @@ public class BuyerController {
     @PostMapping("/buyer/update")
     public String updateBuyer(HttpSession session, @ModelAttribute("buyer") Buyer updatedBuyer, Model model) {
         Buyer loggedInBuyer = (Buyer) session.getAttribute("loggedInUser");
-        System.out.println("its getting printed........#######################################...........");
-
         if (loggedInBuyer == null) {
             return "redirect:/revshop/login"; // Redirect if not logged in
         }
