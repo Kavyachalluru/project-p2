@@ -37,14 +37,14 @@ public class ReviewController {
     @PostMapping("/add")
     public String submitReview(@ModelAttribute Review review) {
         restTemplate.postForEntity(REVIEW_SERVICE_URL, review, Review.class);
-        return "redirect:/revshop/orderitems"; // Redirect back to order items after adding review
+        return "redirect:http://localhost:9089/revshop/orderitems"; // Redirect back to order items after adding review
     }
 
     // Delete a review
     @PostMapping("/delete/{id}")
     public String deleteReview(@PathVariable Long id, @RequestParam Long productId, @RequestParam Long orderId) {
-        String deleteUrl = REVIEW_SERVICE_URL + "/" + id; // Define the URL to call the review service to delete the review.
-        restTemplate.delete(deleteUrl); // Use RestTemplate to delete the review.
-        return "redirect:/revshop/reviews/addForm?productId=" + productId + "&orderId=" + orderId; // Redirect to a page showing the remaining reviews.
+        String deleteUrl = REVIEW_SERVICE_URL + "/" + id; // Defines the URL to call the review service to delete the review.
+        restTemplate.delete(deleteUrl); // Uses RestTemplate to delete the review.
+        return "redirect:http://localhost:9089/revshop/reviews/addForm?productId=" + productId + "&orderId=" + orderId; // Redirect to a page showing the remaining reviews.
     }
 }
