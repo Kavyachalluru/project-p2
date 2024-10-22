@@ -30,6 +30,7 @@ public class OrderService {
 	
     @Autowired
     private OrderRepository orderRepository;
+    private static final String PRODUCT_SERVICE_URL = "http://localhost:8081/revshop/product/"; // Replace with actual URL of user service
 
     @Autowired
     private OrderItemsRepository orderItemRepository;
@@ -179,4 +180,31 @@ public class OrderService {
         return ordersDTOList;
     }
     
-}
+
+       @Transactional
+        public Orders createOrderss(OrdersDTO ordersDTO) {
+            Orders order = new Orders();
+            order.setBuyerId(ordersDTO.getBuyerId());
+            order.setShippingAddress(ordersDTO.getShippingAddress());
+            order.setPaymentMethod(ordersDTO.getPaymentMethod());
+            order.setTotalPrice(ordersDTO.getTotalPrice());
+
+             List<OrderItems> orderItems = new ArrayList<>();
+            for (OrderItemDTO orderItemDTO : ordersDTO.getOrderItems()) {
+                OrderItems orderItem = new OrderItems();
+                orderItem.setProductId(orderItemDTO.getProductId());
+                orderItem.setQuantity(orderItemDTO.getQuantity());
+                orderItem.setTotalPrice(orderItemDTO.getTotalPrice());
+                Product product=restTemplate.getForObject(PRODUCT_SERVICE_URL +orderItemDTO.getProductId(),Product.class);
+                order.setSellerId(product.getSeller().getId());
+                orderItem.setOrder(order);
+                orderItems.add(orderItem);
+            }
+            order.setOrderItems(orderItems);  // Set the list of order items in the order
+
+            return orderRepository.save(order);  // Assuming ordersRepository is handling saving the order and order items
+        }
+    }
+
+    
+

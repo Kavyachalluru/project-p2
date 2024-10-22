@@ -93,19 +93,11 @@
         <h2>Order Confirmation</h2>
         <div class="order-details">
             <h4>Order Summary</h4>
-            <ul>
-                <li th:each="item, stat : ${cartItems}">
-                    
-                    <span th:text="${item.quantity}">Quantity</span> - 
-                    <span th:text="${item.price}">Price</span>
-                    <input type="hidden" name="cartItems[__${stat.index}__].product.id" th:value="${item.productId}" />
-                    <input type="hidden" name="cartItems[__${stat.index}__].quantity" th:value="${item.quantity}" />
-                </li>
-            </ul>
+            
             <h4>Total: <span th:text="${totalPrice}">Total Price</span></h4>
         </div>
 
-        <form action="/revshop/addorders" method="post" th:object="${order}">
+        <form action="/revshop/addorder" method="post" th:object="${order}">
            <h5>Shipping Address:</h5>
                 <textarea class="form-control" rows="4" placeholder="Enter your shipping address..." name="shippingAddress"></textarea>
 

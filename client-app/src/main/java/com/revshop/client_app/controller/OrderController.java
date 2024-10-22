@@ -234,54 +234,71 @@ public class OrderController {
     }
     @PostMapping("/addorder")
     public String submitOrder(
-            @ModelAttribute("order") OrdersDTO orderDto,
+            @RequestParam String shippingAddress,
+            @RequestParam String paymentMethod,
             HttpSession session,
             Model model) {
+
+        // Retrieve buyerId from session (assumes buyer is logged in)
         Long buyerId = (Long) session.getAttribute("loggedInUser");
+
         if (buyerId == null) {
             model.addAttribute("message", "You need to log in to place an order.");
-            return "redirect:/revshop/login";
+            return "redirect:/revshop/login"; // Redirect to login page if user is not logged in
         }
-         List<OrderItemDTO> cartItems = orderDto.getOrderItems();
-        if (cartItems == null || cartItems.isEmpty()) {
-            model.addAttribute("message", "Your cart is empty.");
-            return "redirect:/revshop/cart"; // Redirect to the cart page if empty
-        }
-        orderDto.setBuyerId(buyerId);
-        double totalOrderPrice = 0.0;
-        List<OrderItemDTO> orderItems = new ArrayList<>();
-        for (OrderItemDTO item : cartItems) {
-            Long productId = item.getProductId();
-            System.out.println(productId + "  from cart the product");
-            int quantity = item.getQuantity();
 
-            Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + productId, Product.class);
+        // Fetch cart items for the buyer
+        List<Cart> cartItems = cartRepository.findByBuyerId(buyerId);
+        if (cartItems.isEmpty()) {
+            model.addAttribute("message", "Your cart is empty.");
+            return "redirect:/revshop/cart"; // Redirect to cart page if cart is empty
+        }
+
+        // Initialize the order DTO
+        OrdersDTO orderDto = new OrdersDTO();
+        orderDto.setBuyerId(buyerId);  // Set buyer ID
+        orderDto.setShippingAddress(shippingAddress);  // Set shipping address
+        orderDto.setPaymentMethod(paymentMethod);  // Set payment method
+
+        List<OrderItemDTO> orderItems = new ArrayList<>();
+        double totalOrderPrice = 0.0;
+
+        for (Cart cart : cartItems) {
+            Product product = restTemplate.getForObject(USER_SERVICE_URL + "/product/" + cart.getProduct_id(), Product.class);
+            
             if (product == null) {
-                model.addAttribute("message", "Product not found for ID: " + productId);
-                return "redirect:/revshop/cart";
+                model.addAttribute("message", "Product not found for item in the cart.");
+                return "redirect:/revshop/cart";  // Redirect if product is not found
             }
 
-            double itemTotalPrice = product.getDiscountPrice() * quantity;
-            totalOrderPrice += itemTotalPrice;
+            double productPrice = product.getDiscountPrice();
+            totalOrderPrice += productPrice * cart.getQuantity();
 
-            // Create OrderItemDTO and set details
+            cart.setProduct(product);  
+            cart.setPrice(productPrice);
+
             OrderItemDTO orderItemDto = new OrderItemDTO();
-            orderItemDto.setProductId(productId);
-            orderItemDto.setQuantity(quantity);
-            orderItemDto.setTotalPrice(itemTotalPrice);
+            orderItemDto.setProductId(product.getId());
+            orderItemDto.setTotalPrice(productPrice * cart.getQuantity());
+            orderItemDto.setQuantity(cart.getQuantity());
             orderItems.add(orderItemDto);
         }
 
-        // Set total price and order items in the order DTO
-        orderDto.setTotalPrice(totalOrderPrice);
         orderDto.setOrderItems(orderItems);
+        orderDto.setTotalPrice(totalOrderPrice);  // Set total order price
 
-        // Send the order to the order service
-        String orderServiceUrl = "http://localhost:9090/revshop/place"; // Adjust URL as necessary
+        String orderServiceUrl = "http://localhost:9090/revshop/place"; // Adjust the order service URL as needed
         ResponseEntity<Orders> response = restTemplate.postForEntity(orderServiceUrl, orderDto, Orders.class);
-        // Add success message to the model
-        model.addAttribute("message", "Order placed successfully!");
-        return "OrderConfirmation"; // Return the order confirmation view
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            cartRepository.deleteByBuyerId(buyerId);
+            model.addAttribute("message", "Order placed successfully!");
+             return "redirect:/revshop/displayProducts";
+            
+        } else {
+            model.addAttribute("message", "Failed to place the order. Please try again.");
+            return "OrderConfirmation";
+        }
     }
 
     }

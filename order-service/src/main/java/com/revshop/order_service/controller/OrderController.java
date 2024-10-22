@@ -46,13 +46,22 @@ public class OrderController {
        
     @GetMapping("/orders/{sellerId}")
     public ResponseEntity<List<OrdersDTO>> viewOrdersBySeller(@PathVariable Long sellerId) {
-        System.out.println(sellerId);
     	List<OrdersDTO> orders = orderService.getOrdersBySellerId(sellerId); 
+    	System.out.println();
         logger.info("order body : {}" + orders);
         if (orders.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+    @PostMapping("/placeorders")
+    public ResponseEntity<Orders> placeOrders(@RequestBody OrdersDTO ordersDTO) {
+    	
+    	logger.info("Creating order with DTO: {}", ordersDTO);
+        Orders savedOrder = orderService.createOrderss(ordersDTO); 
+        
+        logger.info("Order created successfully: {}", savedOrder);
+        return new ResponseEntity<>(savedOrder, HttpStatus.CREATED);
     }
 }
