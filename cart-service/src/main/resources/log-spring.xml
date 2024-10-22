@@ -35,5 +35,7 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+    <logger name="com.revshop.p2.service" level="INFO" /> <!-- General logging for the service package -->
+    
 
 </configuration>

@@ -29,6 +29,8 @@
 
     <!-- Logger for OrderService with DEBUG level -->
     <logger name="com.revshop.order_service.service.OrderService" level="DEBUG" />
+    <logger name="com.revshop.order_Service.service" level="INFO" /> <!-- General logging for the service package -->
+    
 
     <!-- Add other specific loggers if needed -->
     <!-- <logger name="com.revshop.order_service.repository" level="INFO" /> -->

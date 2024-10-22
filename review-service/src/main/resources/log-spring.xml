@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Define the logging pattern -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n" />
+
+    <!-- Console Appender: Log to the console -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender: Log to a file -->
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/review-service.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Archive logs every day -->
+            <fileNamePattern>logs/review-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory> <!-- Keep logs for 30 days -->
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger for ReviewService class -->
+    <logger name="com.revshop.review_service.service" level="INFO" additivity="false">
+        <!-- Use both console and file appenders -->
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+
+    <!-- Root logger: Logs for all other classes -->
+    <root level="INFO">
+        <appender-ref ref="consoleAppender" />
+    </root>
+
+</configuration>
